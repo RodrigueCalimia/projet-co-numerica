@@ -604,4 +604,14 @@ a {
 .menu_user__link:hover {
   color: var(--nm-orange-dark);
 }
+
+.st0 {
+  fill-rule: evenodd;
+  clip-rule: evenodd;
+  fill: var(--bs-light);
+}
+
+.st1 {
+  fill: var(--bs-light);
+}
 /*# sourceMappingURL=style.css.map */
