@@ -1,0 +1,98 @@
+// Colors
+
+$colors: (
+  /*bleuColor   : #4C39E9,
+  orangeColor : #FB4210,
+  darkColor   : #dc3203,
+  lightColor  : #FAFAFA,
+  blackColor  : #1B2032,
+  bs-blue     : #4C39E9,
+  bs-orange   : #FB4210,
+  bs-primary  : #FB4210,
+  bs-light    : #FAFAFA*/
+  
+  bs-blue         : #4C39E9,
+  bs-orange       : #FB4210,
+  nm-orange-dark  : #dc3203,
+  bs-dark         : #1B2032,
+  bs-light        : #FAFAFA,
+  bs-primary      : #FB4210,
+  gray-400        : #7E818B,
+  gray-300        : #B1B3B7,
+  gray-200        : #D1D2D4,
+  gray-100        : #F0F0F2,
+);
+
+// Typographie
+
+$typo: (
+  mono: ('Work Sans', courier),
+  sans-serif: ('Mulish', Helvetica)
+);
+
+$intro: (
+  min : 18px,
+  max : 24px
+);
+
+$body: (
+  min : 13px,
+  max : 16px
+);
+
+$heading-1: (
+  min : 36px,
+  max : 48px
+);
+
+$heading-2: (
+  min : 28px,
+  max : 36px
+);
+
+$heading-3: (
+  min : 18px,
+  max : 24px
+);
+
+$heading-4: (
+  min : 12px,
+  max : 16px
+);
+
+// Espaces
+
+$spaces: (
+  xs: 5px,  
+  s: 24px,
+  m: 48px,
+  l: 96px
+);
+
+// Responsive
+
+$breakpoints: (
+  sm : 640px,
+  md : 960px,
+  lg : 1296px
+);
+
+// Grille
+
+$container-margin: map-get($spaces, 's') !default;
+
+// Espace de gouttière
+$gutter: map-get($spaces, 'm');
+// Nombre de colonnes
+$nbCol: 12;
+// Largeur maximum de la page
+$container: map-get($breakpoints, 'lg') - $container-margin * 2;
+
+$colMin: 0;
+// Calcul pour la taille maximum d'une colonne de la grille
+$colMax: calc( ( #{ $container } - #{ $gutter } * ( #{ $nbCol } - 1 ) ) / #{ $nbCol } );
+
+
+// Largeur de la colonne principale
+$module: 6; // Nb de colonnes de la grille
+$widthMainColumn: calc( #{ $colMax } * #{ $module } + #{ $gutter } * ( #{ $module } - 1 ));

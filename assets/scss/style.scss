@@ -1,0 +1,42 @@
+/*
+Theme Name: Projet-groupe
+Theme URI: 
+Author: Rodrigue
+Author URI: 
+Description: Le thème de la solution Numerica.
+Version: 1.0
+Tags: 
+*/
+
+// Bootstrap
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
+
+// Vendors
+@import "partials/vendors/normalize";
+
+// Utils
+@import "partials/utils/functions";
+@import "partials/utils/variables";
+@import "partials/utils/mixins";
+
+// Base
+@import "partials/base/main";
+
+// Components
+@import "partials/components/icons";
+@import "partials/components/buttons";
+@import "partials/components/alerts";
+@import "partials/components/forms";
+@import "partials/components/cards";
+@import "partials/components/modals";
+
+// content
+@import "partials/content/tables";
+
+// Layout
+@import "partials/layout/header";
+
+// Pages
+
+
+// Wordpress

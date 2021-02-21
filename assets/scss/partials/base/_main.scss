@@ -1,0 +1,47 @@
+:root {
+  @each $name,
+  $color in $colors {
+    --#{$name}: #{$color};
+  }
+}
+
+/* Style sur le contenu de la page */
+.main{
+  margin-left: 10%;
+  margin-right: 10%;
+}
+.header-section{
+  display: flex;
+  justify-content: space-between;
+}
+
+body {
+  font-family: map-get($typo, "sans-serif"), sans-serif;
+  @include fluid-type($body);
+  line-height: 1.6;
+  background-color: color(bs-light);
+}
+
+.search{
+  width: 500px;
+}
+
+h1 {
+  text-align: center;
+  color: color(bs-orange);
+  margin-top: map-get($spaces, 's');
+  margin-bottom: map-get($spaces, 's');
+}
+
+a{ 
+ text-decoration:none;
+ color: transparent;
+}
+
+.table {
+  margin-top: map-get($spaces, 's'); // application d'un espace suppérieur entre les tableaux et le contenu au dessus
+}
+
+.col-md-6 {
+  margin-top: map-get($spaces, 's'); // application d'un espace suppérieur entre les lignes du formaulaire
+}

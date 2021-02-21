@@ -1,0 +1,15 @@
+// stylisation des icônes d'action
+.bi {
+  color: color(bs-orange);
+  margin-left: map-get($spaces, 'xs');
+
+  &:hover {
+    color: color(nm-orange-dark);
+  }
+}
+
+.bi-person-square {
+  color: color(bs-light);
+  width: 25px;
+  height: 25px;
+}

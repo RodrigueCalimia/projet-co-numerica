@@ -1,0 +1,51 @@
+.btn {
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  letter-spacing: 1px;
+  border-radius: .50rem;
+}
+
+.btn-primary{
+  color: color(bs-light);
+  background-color: color(bs-orange);
+  border-color: color(bs-orange);
+
+  &:hover {
+    background-color: color(bs-light);
+    color: color(bs-orange);
+    border-color: color(bs-orange);
+  }
+}
+
+.btn-outline-success{
+  background-color: color(bs-light);
+  color: color(bs-orange);
+  border-color: color(bs-orange);
+
+  &:hover {
+    color: color(bs-light);
+    background-color: color(bs-orange);
+    border-color: color(bs-orange);
+  }
+}
+
+.btn-actions{
+  background-color: transparent;
+  border: none;
+}
+
+#conteneur-btn{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-justify-content-end{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-margin{
+  margin-top: 20px;
+}
