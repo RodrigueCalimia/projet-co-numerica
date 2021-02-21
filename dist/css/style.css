@@ -505,11 +505,10 @@ a {
   color: var(--bs-light);
 }
 
-thead,
-.table-td-action {
-  text-align: center;
-}
-
+/*thead,
+.table-td-action{
+    text-align: center;
+}*/
 .header {
   display: -webkit-box;
   display: -ms-flexbox;

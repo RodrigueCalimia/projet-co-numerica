@@ -16,14 +16,15 @@
     $typeEntOpcoPage='vide';
 
     if ($titlePage == 'Les Entreprises'):
-        $typeEntOpcoPage = 'entreprise';
+        $typeEntOpcoPage = 'Entreprise';
     elseif ($titlePage == 'Les OPCO'):
         $typeEntOpcoPage = 'OPCO';
     endif;
+    setcookie("TypeEntOpco", $typeEntOpcoPage);
 ?>
 
 <div class="main">
-    <!-- affichage du nom de la page -->    
+    <!-- affichage du nom de la page -->
     <h1><?php echo $titlePage ?></h1>
     <section>
         <div class="header-section">
@@ -101,11 +102,8 @@
         </div>
     </section>
 </div>
-<?php
-    echo '<pre>';
-    $typeEntOpco;
-    echo '</pre>';
-?>
+
+<!-- affichage de la modal contenant le formulaire d'ajout -->
 <div class="modal fade" id="addEntrepriseOpco" tabindex="-1" aria-labelledby="addFormationLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
