@@ -11,7 +11,7 @@
     if($pageTitle == 'Ajouter une formation'){
         get_template_part( 'template-parts/forms/create', 'formation');
     }
-    if($pageTitle == 'Les Entreprises'){
+    if($pageTitle == 'Les Entreprises' || $pageTitle == 'Les OPCO'){
         get_template_part( 'template-parts/listes/liste', 'entreprises-opco');
     }
     if($pageTitle == 'Ajouter une entreprise'){
