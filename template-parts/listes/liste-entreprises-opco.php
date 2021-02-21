@@ -12,11 +12,20 @@
     $LesEntreprisesOpco = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_entreprises_opco'));
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();
+    $titlePage = get_the_title();
+    $typeEntOpcoPage='vide';
+
+    if ($titlePage == 'Les Entreprises'):
+        $typeEntOpcoPage = 'Entreprise';
+    elseif ($titlePage == 'Les OPCO'):
+        $typeEntOpcoPage = 'OPCO';
+    endif;
+    setcookie("TypeEntOpco", $typeEntOpcoPage);
 ?>
 
 <div class="main">
-    <!-- affichage du nom de la page -->    
-    <h1><?php the_title()?></h1>
+    <!-- affichage du nom de la page -->
+    <h1><?php echo $titlePage ?></h1>
     <section>
         <div class="header-section">
             <div class="search">    
@@ -40,7 +49,6 @@
                 <thead>
                     <tr>
                         <th>Nom commercial</th>
-                        <th>Type</th>
                         <th>Adresse</th>
                         <th>Siret</th>
                         <th>NAF</th>
@@ -57,10 +65,11 @@
                         $cpEntOpco = $lEntrepriseOpco->CP_ENT_OPCO ;
                         $villeEntOpco = $lEntrepriseOpco->VILLE_ENT_OPCO ;
                         $siretEntOpco = $lEntrepriseOpco->SIRET_ENT_OPCO;
-                        $nafEntOpco = $lEntrepriseOpco->NAF_ENT_OPCO;?>    
+                        $nafEntOpco = $lEntrepriseOpco->NAF_ENT_OPCO;
+                        ?>    
                         <tr>
+                            <?php if(($titlePage == 'Les Entreprises') && ($typeEntOpco == 'Entreprise')):?>
                             <td><?php echo  $nomEntOpco ;?></td>
-                            <td><?php echo  $typeEntOpco ;?></td>
                             <td><?php echo  $adresseEntOpco ;?> - <?php echo  $cpEntOpco;?> <?php echo  $villeEntOpco ;?></td>
                             <td><?php echo  $siretEntOpco ;?></td>
                             <td><?php echo  $nafEntOpco ;?></td>
@@ -72,6 +81,20 @@
                                     </a>
                                 </span>
                             </td>
+                            <?php elseif(($titlePage == 'Les OPCO') && ($typeEntOpco == 'OPCO')):?>
+                            <td><?php echo  $nomEntOpco ;?></td>
+                            <td><?php echo  $adresseEntOpco ;?> - <?php echo  $cpEntOpco;?> <?php echo  $villeEntOpco ;?></td>
+                            <td><?php echo  $siretEntOpco ;?></td>
+                            <td><?php echo  $nafEntOpco ;?></td>
+                            <td class="table-td-action">
+                                <span title="Modifier le site" >
+                                    <!-- envoie de paramètres du formulaire dans l'url afin de les récupérer pour remplir le formulaire de modification -->
+                                    <a href="update-entreprise-opco.php?titreContenu=<?php the_title()?>&amp;idEntOpco=<?php echo  $idEntOpco;?>&amp;nomEntOpco=<?php echo  $nomEntOpco;?>&amp;typeEntOpco=<?php echo  $typeEntOpco;?>&amp;adresseEntOpco=<?php echo  $adresseEntOpco;?>&amp;cpEntOpco=<?php echo  $cpEntOpco;?>&amp;villeEntOpco=<?php echo  $villeEntOpco;?>&amp;siretEntOpco=<?php echo  $siretEntOpco;?>&amp;nafEntOpco=<?php echo  $nafEntOpco;?>">
+                                        <i class="bi bi-pencil-square" ></i>
+                                    </a>
+                                </span>
+                            </td>
+                            <?php endif;?>
                         </tr>
                     <?php endforeach;?>
                 </tbody>
@@ -80,11 +103,12 @@
     </section>
 </div>
 
+<!-- affichage de la modal contenant le formulaire d'ajout -->
 <div class="modal fade" id="addEntrepriseOpco" tabindex="-1" aria-labelledby="addFormationLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
       <div class="modal-header text-center">
-        <h5 class="modal-title" id="modalLabel">Ajout d'une entreprise ou OPCO</h5>
+        <h5 class="modal-title" id="modalLabel">Ajout d'une <?php echo $typeEntOpcoPage ?></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
         <div class="modal-body">

@@ -1,13 +1,11 @@
 <?php
+    // récupération du cookie indiquant si les donées sont liées à une entreprise ou OPCO
+    $typeEntOpcoPage = $_COOKIE["TypeEntOpco"];
+    // connexion à la BBD WP
     global $wpdb;
-    // récupération des données de la table
-    $lesTypeEntrepriseOpco = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_type_entreprise_opco'));
-    // si erreur de connexion avec la BDD alors affichage d'une erreur
-    $wpdb -> print_error ();
     // traitement du formulaire
     if ($_POST) {
         // récupération des valeurs des champs du formulaire
-        $typeEntOpco    =$_POST['type-entreprise-opco'];
         $nomCommercial  =$_POST['nom_commercial'];
         $adresse        =$_POST['adresse-entreprise-opco'];
         $codePostal     =$_POST['code_postal-entreprise-opco'];
@@ -17,7 +15,7 @@
         // mise à jour des données dans la table
         $wpdb->update('wp_entreprises_opco', 
             array(
-                'TYPE_ENT_OPCO'     =>$typeEntOpco,
+                'TYPE_ENT_OPCO'     =>$typeEntOpcoPage,
                 'NOM_ENT_OPCO'      =>$nomCommercial,
                 'ADRESSE_ENT_OPCO'  =>$adresse,
                 'CP_ENT_OPCO'       =>$codePostal,
@@ -27,31 +25,20 @@
             ),
             array('ID_ENT_OPCO'  =>$_GET['idEntOpco'])
         );
-        echo "<script>alert('L\'".$typeEntOpco." ".$nomCommercial." a bien été mise à jour !');</script>";
-        echo "<script>window.location = '" .site_url("/les-entreprises")."'</script>";
+        echo "<script>alert('L\'".$typeEntOpcoPage." ".$nomCommercial." a bien été mise à jour !');</script>";
+        
+        if ($typeEntOpcoPage == 'Entreprises'):
+            echo "<script>window.location = '" .site_url("/les-entreprises")."'</script>";
+        elseif ($typeEntOpcoPage == 'OPCO'):
+            echo "<script>window.location = '" .site_url("/les-opco")."'</script>";
+        endif;
     }
 ?>
 
 <div class="main">   
-    <h1>Modification</h1> 
+    <h1>Modification d'une <?php echo $typeEntOpcoPage; ?></h1> 
     <div class="container form-dim-width">
         <form class="row justify-content-between" method="POST">
-            <div class="col-md-6">
-                <!-- Zone du choix du lieu de formation -->
-                <label for="type-entreprise-opco" class="form-label">Type</label>
-                <!-- récupération des lieux de formation -->
-                <select class="form-select" aria-label="Default select example" id="type-entreprise-opco" name="type-entreprise-opco" required>
-                    <?php foreach ($lesTypeEntrepriseOpco as $leTypeEntrepriseOpco):
-                        $typeEntOpcoTable = $leTypeEntrepriseOpco->TYPE_ENT_OPCO;
-                        $typeEntOpcoGet = $_GET['typeEntOpco'];
-                        // sélection du choix à mettre en visuel
-                        if ($typeEntOpcoTable == $typeEntOpcoGet){?>
-                        <option value="<?php echo $typeEntOpcoTable;?>" selected><?php echo  $typeEntOpcoTable ;?></option>
-                        <?php }else{?>
-                        <option value="<?php echo $typeEntOpcoTable;?>"><?php echo  $typeEntOpcoTable ;?></option>
-                    <?php } endforeach;?>
-                </select>
-            </div>
             <div class="col-md-6">
                 <label for="nom_commercial" class="form-label">Nom commercial</label>
                 <input type="text" name="nom_commercial" class="form-control" id="nom_commercial" value="<?php echo $_GET['nomEntOpco'];?>" required>
@@ -82,9 +69,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    function ShowListeEntreprisesOpco() {
-        window.location = '../les-entreprises';
-    }
-</script>

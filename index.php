@@ -12,7 +12,7 @@
         get_template_part( 'template-parts/forms/update', 'formation');
     }
 
-    if($titreContenu == 'Les Entreprises'){   
+    if($titreContenu == 'Les Entreprises' || $titreContenu == 'Les OPCO'){   
         get_template_part( 'template-parts/forms/update', 'entreprise-opco');
     }
 ?>
