@@ -13,3 +13,11 @@
   width: 25px;
   height: 25px;
 }
+
+.bi-nav-icon{
+  color: color(bs-light);
+
+  &:hover {
+    color: color(bs-orange);
+  }
+}

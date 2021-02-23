@@ -9,7 +9,7 @@
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();
     // récupération des champs du formulaire
-    if ($_POST) {
+    if (!empty($_POST['edit-devis'])) {
         $numFormation   =$_POST['num_formation'];
         $nomFormation   =$_POST['nom_formation'];
         $societe        =$_POST['societe'];
@@ -25,7 +25,25 @@
                 'NB_STAGIAIRES' =>$nbStagiaires
             )
         );
-        echo "<>window.location = '" .site_url("/les-devis")."'</>";
+        echo "<script>alert('Le site ".$nomSite." a bien été créé !');</script>";
+        //echo "<>window.location = '" .site_url("/les-devis")."'</>";
+    }
+    if (!empty($_POST['create-site'])) {
+        // récupération des valeurs des champs du formulaire
+        $nomSite        =$_POST['nom_site'];
+        $adresseSite    =$_POST['adresse_site'];
+        $cpSite         =$_POST['code_postal_site'];
+        $villeSite      =$_POST['ville_site'];
+        // ajout des données dans la table
+        $wpdb->insert('wp_sites', 
+            array(
+                'NOM_SITE'          =>$nomSite,
+                'ADRESSE_SITE'      =>$adresseSite,
+                'CODE_POSTAL_SITE'  =>$cpSite,
+                'VILLE_SITE'        =>$villeSite,
+            )
+        );
+        echo "<script>alert('Le site ".$nomSite." a bien été créé !');</script>";
     }
 ?>
 
@@ -43,7 +61,9 @@
 
     <form class="row" method="POST">
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-client" role="tabpanel" aria-labelledby="nav-client-tab">Fomulaire client</div>
+            <div class="tab-pane fade show active" id="nav-client" role="tabpanel" aria-labelledby="nav-client-tab">
+                Fomulaire client
+            </div>
             <div class="tab-pane fade" id="nav-pedagogie" role="tabpanel" aria-labelledby="nav-pedagogie-tab">
                 <div class="col-md-6">
                     <!-- Zone du choix du lieu de formation -->
@@ -88,14 +108,16 @@
                     <div class="row">
                         <div class="col">
                             <h6>Lieu de la formation</h6>
+                            <div id="id-boite-check">
                             <?php foreach ($lesLieuxFormation as $leLieuFormation):?> 
-                                <div class="form-check">
+                                <div class="form-check" id="liste-site-numerica">
                                     <label class="form-check-label" for="flexCheckDefault">  
                                         <?php echo  $leLieuFormation->NOM_SITE ;?>
                                     </label>
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                </div> 
+                                    <input class="form-check-input" type="checkbox" value="<?php echo  $leLieuFormation->ID_SITE ;?>">
+                                </div>
                             <?php endforeach;?>
+                            </div>
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#addSite">Ajouter un site</button>
                         </div>
                         <div class="col">
@@ -300,7 +322,7 @@
                 </div>
                 
                 <div class="col-md-6">
-                    <input class="btn btn-primary" type="submit" value="Éditer le devis"></input>
+                    <input class="btn btn-primary" type="submit" value="Éditer le devis" name="edit-devis"></input>
                 </div>
             </div>
         </div>
@@ -310,19 +332,51 @@
     <div class="modal fade" id="addSite" tabindex="-1" aria-labelledby="addSiteLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-            <div class="modal-body">
-                <?php get_template_part( 'template-parts/forms/creer', 'site');?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="AddSiteNumerica();">Ajouter</button>
-            </div>
+                <div class="modal-body">
+                    <?php //get_template_part( 'template-parts/forms/create', 'site');?>
+                    <div class="col-md-6">
+                        <label for="nom_site" class="form-label">Libellé du site</label>
+                        <input type="text" name="nom_site" class="form-control" id="nom_site" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="adresse_site" class="form-label">Adresse</label>
+                        <input type="text" name="adresse_site" class="form-control" id="adresse_site" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="code_postal_site" class="form-label">Code postal</label>
+                        <input type="number" name="code_postal_site" class="form-control" id="code_postal_site" min="0"  required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ville_site" class="form-label">Ville</label>
+                        <input type="text" name="ville_site" class="form-control" id="ville_site" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="BtnAddSite();" name="create-site">Ajouter</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    function BtnAddSite(){
+        var listeSiteNumerica = document.querySelector("#id-boite-check").innerHTML;
+        var nomSite = document.getElementById("nom_site").value;
+        listeSiteNumerica = listeSiteNumerica + '<div class="form-check" id="liste-site-numerica">';
+        listeSiteNumerica = listeSiteNumerica + '<label class="form-check-label" for="flexCheckDefault">';
+        listeSiteNumerica = listeSiteNumerica + nomSite;
+        listeSiteNumerica = listeSiteNumerica + '</label>';
+        listeSiteNumerica = listeSiteNumerica + '<input class="form-check-input" type="checkbox" value="newSite">';
+        listeSiteNumerica = listeSiteNumerica + '</div>';
+        document.querySelector("#id-boite-check").innerHTML = listeSiteNumerica;
+    }
+    
+         
+            
+
+
     function AddSiteNumerica(){
         selectNomSite = document.getElementById("nom_site");
         valNomSite = selectNomSite.value;
