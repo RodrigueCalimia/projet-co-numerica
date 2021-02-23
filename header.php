@@ -33,7 +33,7 @@
                                     c0.4-0.5,0.8-1.1,1-1.8l-2.5-0.7C113.5,16.8,113.3,17.2,112.9,17.5z M100.1,19.9h2.8V9.4h-2.8V19.9z"/>
                             </g>
                         </svg>
-                        <h2><?php bloginfo('description'); ?></h2>
+                        <p><?php bloginfo('description'); ?></p>
                     </div>
                     <div class="up__element">
                         <?php 
@@ -94,19 +94,24 @@
                             ?>
                         </div>
                     </nav>
+                    <!--
                     <nav class="header__menu menu" id="mainNav" aria-label="Menu principal">
                         <div class="container-fluid">
-                            <?php
+                            <?php /*
                                 wp_nav_menu ( array (
                                     'theme_location'    => 'admin-menu',
                                     'container'         => false, // supprime la div que rajoute WP
                                     'menu_class'        => 'menu__list',
                                     'depth'             => 1, // interdit le fait d'afficher un sous-menu
                                     'walker'            => new WPDocs_Walker_Nav_Menu() // appel de la classe Walker
-                                ) ); 
+                                ) ); */
                             ?>
                         </div>
-                        <a class="nav-link" href="#sites">Sites</a>
+                    </nav> -->
+                    <nav class="nav">
+                        <a class="nav-link" href="<?php echo home_url($path = 'administration', $scheme = null);?>">
+                            <i class="bi bi-sliders bi-nav-icon"></i>
+                        </a>
                     </nav>
                 </div>
             </header>

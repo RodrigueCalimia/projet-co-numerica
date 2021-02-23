@@ -1,4 +1,4 @@
-<?php
+<?php/*
     global $wpdb;
     if ($_POST) {
         // récupération des valeurs des champs du formulaire
@@ -17,7 +17,7 @@
         );
         echo "<script>alert('Le site ".$nomSite." a bien été créé !');</script>";
         echo "<script>window.location = '" .site_url("/les-sites-numerica")."'</script>";
-    }
+    }*/
 ?>
 
 <form class="row" method="POST">

@@ -426,6 +426,14 @@ a {
   height: 25px;
 }
 
+.bi-nav-icon {
+  color: var(--bs-light);
+}
+
+.bi-nav-icon:hover {
+  color: var(--bs-orange);
+}
+
 .btn {
   text-transform: uppercase;
   text-decoration: none;
