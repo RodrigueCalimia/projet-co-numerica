@@ -503,6 +503,10 @@ a {
   width: 100px;
 }
 
+.input-group-text-session {
+  width: 90px;
+}
+
 .card-header {
   background-color: var(--gray-400);
   color: var(--bs-light);

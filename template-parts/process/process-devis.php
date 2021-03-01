@@ -140,16 +140,23 @@
                     <div class="row">
                         <div class="col">
                             <h6>Durée de la formation</h6>
-                            <input type="number" name="durre_formation" class="form-control" id="durre_formation" required onchange="DureeFormation();" value=0>
-                            jours soit xxx heures
+                            <div class="input-group mb-3">
+                                <input type="number" name="duree_formation_jour" class="form-control" id="duree-formation-jour" required onchange="DureeFormationJour();" value=0 min="0" step="0.5">
+                                <span class="input-group-text input-group-text-session" id="basic-addon1">jours</span>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="number" name="duree-formation-heure" class="form-control" id="duree-formation-heure" required onchange="DureeFormationHeure();" value=0 min="0" step="3.5">
+                                <span class="input-group-text input-group-text-session" id="basic-addon2">heures</span>
+                            </div>
+                            
                         </div>
                         <div class="col">
                             <h6>Dates de la formation</h6>
                             <div class="liste">
                                 <div class="model">
-                                    <div class="dates_formation">
-                                        <label for="validationServer02" class="form-label">Jour 1</label>    
-                                        <input type="date" class="form-control" required>
+                                    <div class="dates_formation" id="liste-dates-formation"><!--
+                                        <label for="validationServer02" class="form-label" id="liste-dates-formation-label">Jour 1</label>    
+                                        <input type="date" class="form-control" required>-->
                                     </div>
                                 </div>
                             </div>
@@ -160,7 +167,7 @@
                         </div>
                         <div class="col">
                             <h6>Nombre de participants</h6>
-                            <input type="number" name="nb_participants" class="form-control" id="nb_participants" required>
+                            <input type="number" name="nb_participants" class="form-control" id="nb_participants" required value=0>
                         </div>
                     </div>
                 </div>
@@ -565,6 +572,41 @@
         document.querySelector("#id-boite-check").innerHTML = listeSiteNumerica;
     }
 
+    /*******************************************************\
+        Gestion de la durée de la formation en jour : 
+        - Calcul du nombre d'heure
+        - Mise à jour de la zone "Dates de la formation"
+    \*******************************************************/
+    function DureeFormationJour(){
+        // récupération du nombre de jour de formation déclaré
+        var dureeFormationJour = document.getElementById("duree-formation-jour").value;
+        // Mise à jour de la zone "Dates de la formation"
+        var listeDatesFormation = ""; //document.querySelector("#liste-dates-formation").innerHTML;
+        // vérification si la durée de la formation en jour est un entier
+        if (Number.isInteger(+dureeFormationJour)) {
+            // ajout des champs dates de formation
+            for(i = 1; i <= dureeFormationJour; i++){
+                listeDatesFormation = listeDatesFormation + '<label for="labelDatesFormation' + i + '" class="form-label">Jour ' + i + '</label>';
+                listeDatesFormation = listeDatesFormation + '<input type="date" class="form-control" required name="date-formation-jour' + i + '">';
+                document.querySelector("#liste-dates-formation").innerHTML = listeDatesFormation;
+            }
+            // Supression des champs dates de formation
+            if (dureeFormationJour == 0){
+                document.querySelector("#liste-dates-formation").innerHTML = "";
+            }
+        }
+    }
+
+    /*******************************************************\
+        Gestion de la durée de la formation en heure : 
+        - Recopie de la durée de la formation en heure dans 
+        le champ "quantité du coût d'achat journalier de la 
+        prestation du formateur"
+    \*******************************************************/
+    function DureeFormationHeure(){
+        dureeFormationHeure = document.querySelector("#duree-formation-heure").value;
+        document.querySelector("#qte-cout-achat-jour-presta").value = dureeFormationHeure;
+    }
     /*******************************************************\
         Gestion de la recopie des données de la formation
         en fonction de la formation sélectionnée
