@@ -4,8 +4,17 @@
     global $wpdb;
     // récupération des données de la table wp_sites contenant les lieux de formations
     $lesLieuxFormation = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_sites'));
-    // récupération des données de la table wp_listeformation contenant les formations
-    $formations = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_listeformation'));
+    // récupération des données de la table wp_formations contenant les formations
+    $lesLormations = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_formations'));
+    // récupération des données de la table wp_cout_fonctionnement contenant les coûts de fonctionnement
+    $lesCoutsFonctionnement = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_cout_fonctionnement'));
+    // stockage des doonées dans les variables
+    foreach ($lesCoutsFonctionnement as $leCoutFonctionnement){
+        $idCoutFonctionnement       = $leCoutFonctionnement->ID_COUT_FONCT;
+        $coutAdminFormation         = $leCoutFonctionnement->COUT_ADMIN_FORMATION;
+        $coutCompta                 = $leCoutFonctionnement->COUT_COMPTA;
+        $coutServiceInformatique    = $leCoutFonctionnement->COUT_SERVICE_INFORMATIQUE;
+    }
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();
     // récupération des champs du formulaire
@@ -122,15 +131,25 @@
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#addSite">Ajouter un site</button>
                         </div>
                         <div class="col">
-                            <h6>Horaires de la formation</h6>
-                            <label class="form-time-label" for="flexTimeDefault">Matin du</label>
-                            <input class="form-time-input" type="time" value="09:00" id="flexTimeDefault01">
-                            <label class="form-time-label" for="flexTimeDefault">à</label>
-                            <input class="form-time-input" type="time" value="12:30" id="flexTimeDefault02">
-                            <label class="form-time-label" for="flexTimeDefault">Après-midi du</label>
-                            <input class="form-time-input" type="time" value="13:30" id="flexTimeDefault03">
-                            <label class="form-time-label" for="flexTimeDefault">à</label>
-                            <input class="form-time-input" type="time" value="17:00" id="flexTimeDefault04">
+                            <div>
+                                <h6>Horaires de la formation</h6>
+                                <label class="form-time-label" for="flexTimeDefault">Matin du</label>
+                                <input class="form-time-input" type="time" value="09:00" id="flexTimeDefault01">
+                                <label class="form-time-label" for="flexTimeDefault">à</label>
+                                <input class="form-time-input" type="time" value="12:30" id="flexTimeDefault02">
+                                <label class="form-time-label" for="flexTimeDefault">Après-midi du</label>
+                                <input class="form-time-input" type="time" value="13:30" id="flexTimeDefault03">
+                                <label class="form-time-label" for="flexTimeDefault">à</label>
+                                <input class="form-time-input" type="time" value="17:00" id="flexTimeDefault04">
+                            </div>
+                            <!-- Zone du choix du type de session -->
+                            <div>
+                                <label for="type-session" class="form-label">Type de Session</label>
+                                <select class="form-select" id="type-session">
+                                    <option value="interEntreprise">Inter-Entreprise</option>
+                                    <option value="intraEntreprise">Intra-Entreprise</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="col">
                             <h6>Prérequis</h6>
@@ -145,10 +164,9 @@
                                 <span class="input-group-text input-group-text-session" id="basic-addon1">jours</span>
                             </div>
                             <div class="input-group mb-3">
-                                <input type="number" name="duree-formation-heure" class="form-control" id="duree-formation-heure" required onchange="DureeFormationHeure();" value=0 min="0" step="3.5">
+                                <input type="number" name="duree-formation-heure" class="form-control" id="duree-formation-heure" required onchange="DureeFormationHeure();TotalCoutAchatJourPresta();TotalAchat()" value=0 min="0" step="3.5">
                                 <span class="input-group-text input-group-text-session" id="basic-addon2">heures</span>
                             </div>
-                            
                         </div>
                         <div class="col">
                             <h6>Dates de la formation</h6>
@@ -167,7 +185,7 @@
                         </div>
                         <div class="col">
                             <h6>Nombre de participants</h6>
-                            <input type="number" name="nb_participants" class="form-control" id="nb_participants" required value=0>
+                            <input type="number" name="nb_participants" class="form-control" id="nb_participants" required onchange="CopyNbParticipants();TotalCoutAchatCertifs();TotalCoutAchatLocation();TotalAchat()" value=0 min="0">
                         </div>
                     </div>
                 </div>
@@ -177,7 +195,8 @@
                 <!-- Zone des prix de ventes -->
                 <div class="container">
                     <!-- 
-                        Titres de la 1ère ligne des ventes 
+                    SECTION PRIX DES VENTES    
+                    Titres de la 1ère ligne des ventes 
                     -->
                     <div class="row justify-content-md-center">
                         <!-- dénomination des titres -->
@@ -211,7 +230,7 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-prix-vente-jour-form" class="form-control" id="total-prix-vente-jour-form" value=0 readonly="true" >
+                                <input type="number" name="total-prix-vente-jour-form" class="form-control" id="total-prix-vente-jour-form" value=0 min="0" readonly="true" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
@@ -223,16 +242,16 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="montant-prix-vente-supports-cours" class="form-control" id="montant-prix-vente-supports-cours" value=0 onchange="TotalPrixVenteSupportsCours();TotalChiffrage()">
+                                <input type="number" name="montant-prix-vente-supports-cours" class="form-control" id="montant-prix-vente-supports-cours" value=0 min="0" onchange="TotalPrixVenteSupportsCours();TotalChiffrage()">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-prix-vente-supports-cours" class="form-control" id="qte-prix-vente-supports-cours" value=0 onchange="TotalPrixVenteSupportsCours();TotalChiffrage()">
+                            <input type="number" name="qte-prix-vente-supports-cours" class="form-control" id="qte-prix-vente-supports-cours" value=0 min="0" onchange="TotalPrixVenteSupportsCours();TotalChiffrage()">
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-prix-vente-supports-cours" class="form-control" id="total-prix-vente-supports-cours" readonly="true" value=0 >
+                                <input type="number" name="total-prix-vente-supports-cours" class="form-control" id="total-prix-vente-supports-cours" readonly="true" value=0 min="0" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
@@ -244,16 +263,16 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="montant-prix-vente-repas" class="form-control" id="montant-prix-vente-repas" value=0 onchange="TotalPrixVenteRepas();TotalChiffrage()">
+                                <input type="number" name="montant-prix-vente-repas" class="form-control" id="montant-prix-vente-repas" value=0 min="0" onchange="TotalPrixVenteRepas();TotalChiffrage()">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-prix-vente-repas" class="form-control" id="qte-prix-vente-repas" value=0 onchange="TotalPrixVenteRepas();TotalChiffrage()">
+                            <input type="number" name="qte-prix-vente-repas" class="form-control" id="qte-prix-vente-repas" value=0 min="0" onchange="TotalPrixVenteRepas();TotalChiffrage()">
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-prix-vente-repas" class="form-control" id="total-prix-vente-repas" readonly="true" value=0 >
+                                <input type="number" name="total-prix-vente-repas" class="form-control" id="total-prix-vente-repas" readonly="true" value=0 min="0" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
@@ -265,16 +284,16 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="montant-prix-vente-certifs" class="form-control" id="montant-prix-vente-certifs" value=0 onchange="TotalPrixVenteCertifs();TotalChiffrage()">
+                                <input type="number" name="montant-prix-vente-certifs" class="form-control" id="montant-prix-vente-certifs" value=0 min="0" onchange="TotalPrixVenteCertifs();TotalChiffrage()">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-prix-vente-certifs" class="form-control" id="qte-prix-vente-certifs" value=0 onchange="TotalPrixVenteCertifs();TotalChiffrage()">
+                            <input type="number" name="qte-prix-vente-certifs" class="form-control" id="qte-prix-vente-certifs" value=0 min="0" readonly="true" onchange="TotalPrixVenteCertifs();TotalChiffrage()">
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-prix-vente-certifs" class="form-control" id="total-prix-vente-certifs" readonly="true" value=0 >
+                                <input type="number" name="total-prix-vente-certifs" class="form-control" id="total-prix-vente-certifs" readonly="true" value=0 min="0" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
@@ -289,44 +308,34 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="montant-prix-vente-autres" class="form-control" id="montant-prix-vente-autres" value=0 onchange="TotalPrixVenteAutres();TotalChiffrage()">
+                                <input type="number" name="montant-prix-vente-autres" class="form-control" id="montant-prix-vente-autres" value=0 min="0" onchange="TotalPrixVenteAutres();TotalChiffrage()">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-prix-vente-autres" class="form-control" id="qte-prix-vente-autres" value=0 onchange="TotalPrixVenteAutres();TotalChiffrage()">
+                            <input type="number" name="qte-prix-vente-autres" class="form-control" id="qte-prix-vente-autres" value=0 omin="0" onchange="TotalPrixVenteAutres();TotalChiffrage()">
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-prix-vente-autres" class="form-control" id="total-prix-vente-autres" readonly="true" value=0 >
+                                <input type="number" name="total-prix-vente-autres" class="form-control" id="total-prix-vente-autres" readonly="true" value=0 min="0" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                     </div>
-                    <!-- Total des vente -->
-                    <div class="row justify-content-md-center">
-                        <div class="col">
-                            <label for="total-ventes" class="form-label">Total des ventes</label>
-                        </div>
-                        <div class="col-lg-2">
-                            <!--<div class="input-group mb-3">
-                                <input type="number" name="montant-total-ventes" class="form-control" id="montant-total-ventes" readonly="true" value=0 >
-                                <span class="input-group-text">€</span>
-                            </div>-->
-                        </div>
-                        <div class="col-lg-2">
-                            <!--<input type="number" name="qte-total-ventes" class="form-control" id="qte-total-ventes" readonly="true" value=0 >-->
-                        </div>
-                        <div class="col-lg-2">
+                    <!-- Total des ventes -->
+                    <div class="row justify-content-md-end">
+                        <div class="col-6">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-total-ventes" class="form-control" id="total-total-ventes" readonly="true" value=0 >
-                                <span class="input-group-text">€</span>
+                                <span class="input-group-text">Total des ventes</span>
+                                <input type="number" name="total-total-ventes" class="form-control chiffrage-total" id="total-total-ventes" readonly="true" value="0" min="0" >
+                                <label class="input-group-text" for="total-total-ventes">€</label>
                             </div>
                         </div>
                     </div>
 
                     <!-- 
-                        Titres de la 1ère ligne des coûts 
+                    SECTION COÛT DES ACHATS    
+                    Titres de la 1ère ligne des coûts d'achat
                     -->
                     <div class="row justify-content-md-center">
                         <!-- dénomination des titres -->
@@ -356,11 +365,11 @@
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-cout-achat-jour-presta" class="form-control" id="qte-cout-achat-jour-presta" value=0 readonly="true" onchange="TotalCoutAchatJourPresta();TotalAchat()">
+                            <input type="number" name="qte-cout-achat-jour-presta" class="form-control" id="qte-cout-achat-jour-presta" value=0 min="0" readonly="true" onchange="TotalCoutAchatJourPresta();TotalAchat()">
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-cout-achat-jour-presta" class="form-control" id="total-cout-achat-jour-presta" value=0 readonly="true" >
+                                <input type="number" name="total-cout-achat-jour-presta" class="form-control" id="total-cout-achat-jour-presta" value=0 rmin="0" readonly="true" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
@@ -372,16 +381,16 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="montant-cout-achat-supports-cours" class="form-control" id="montant-cout-achat-supports-cours" value=0 onchange="TotalCoutAchatSupportsCours();TotalAchat()">
+                                <input type="number" name="montant-cout-achat-supports-cours" class="form-control" id="montant-cout-achat-supports-cours" value=0 min="0" onchange="TotalCoutAchatSupportsCours();TotalAchat()">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-cout-achat-supports-cours" class="form-control" id="qte-cout-achat-supports-cours" value=0 onchange="TotalCoutAchatSupportsCours();TotalAchat()">
+                            <input type="number" name="qte-cout-achat-supports-cours" class="form-control" id="qte-cout-achat-supports-cours" value=0 min="0" onchange="TotalCoutAchatSupportsCours();TotalAchat()">
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-cout-achat-supports-cours" class="form-control" id="total-cout-achat-supports-cours" readonly="true" value=0 >
+                                <input type="number" name="total-cout-achat-supports-cours" class="form-control" id="total-cout-achat-supports-cours" readonly="true" value=0 min="0" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
@@ -393,16 +402,16 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="montant-cout-achat-repas" class="form-control" id="montant-cout-achat-repas" value=0 onchange="TotalCoutAchatRepas();TotalAchat()">
+                                <input type="number" name="montant-cout-achat-repas" class="form-control" id="montant-cout-achat-repas" value=0 min="0" onchange="TotalCoutAchatRepas();TotalAchat()">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-cout-achat-repas" class="form-control" id="qte-cout-achat-repas" value=0 onchange="TotalCoutAchatRepas();TotalAchat()">
+                            <input type="number" name="qte-cout-achat-repas" class="form-control" id="qte-cout-achat-repas" value=0 min="0" onchange="TotalCoutAchatRepas();TotalAchat()">
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-cout-achat-repas" class="form-control" id="total-cout-achat-repas" readonly="true" value=0 >
+                                <input type="number" name="total-cout-achat-repas" class="form-control" id="total-cout-achat-repas" readonly="true" value=0 min="0" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
@@ -414,16 +423,16 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="montant-cout-achat-certifs" class="form-control" id="montant-cout-achat-certifs" value=0 onchange="TotalCoutAchatCertifs();TotalAchat()">
+                                <input type="number" name="montant-cout-achat-certifs" class="form-control" id="montant-cout-achat-certifs" value=0 min="0" onchange="TotalCoutAchatCertifs();TotalAchat()">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-cout-achat-certifs" class="form-control" id="qte-cout-achat-certifs" value=0 onchange="TotalCoutAchatCertifs();TotalAchat()">
+                            <input type="number" name="qte-cout-achat-certifs" class="form-control" id="qte-cout-achat-certifs" value=0 min="0" readonly="true"  onchange="TotalCoutAchatCertifs();TotalAchat()">
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-cout-achat-certifs" class="form-control" id="total-cout-achat-certifs" readonly="true" value=0 >
+                                <input type="number" name="total-cout-achat-certifs" class="form-control" id="total-cout-achat-certifs" readonly="true" value=0 min="0" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
@@ -435,16 +444,16 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="montant-cout-achat-location" class="form-control" id="montant-cout-achat-location" value=0 onchange="TotalCoutAchatLocation();TotalAchat()">
+                                <input type="number" name="montant-cout-achat-location" class="form-control" id="montant-cout-achat-location" value=0 min="0" onchange="TotalCoutAchatLocation();TotalAchat()">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-cout-achat-location" class="form-control" id="qte-cout-achat-location" value=0 onchange="TotalCoutAchatLocation();TotalAchat()">
+                            <input type="number" name="qte-cout-achat-location" class="form-control" id="qte-cout-achat-location" value=0 min="0" readonly="true"  onchange="TotalCoutAchatLocation();TotalAchat()">
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-cout-achat-location" class="form-control" id="total-cout-achat-location" readonly="true" value=0 >
+                                <input type="number" name="total-cout-achat-location" class="form-control" id="total-cout-achat-location" readonly="true" value=0 min="0" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
@@ -456,16 +465,27 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="montant-cout-achat-affaire" class="form-control" id="montant-cout-achat-affaire" value=0 onchange="TotalCoutAchatAffaire();TotalAchat()">
+                                <input type="number" name="montant-cout-achat-affaire" class="form-control" id="montant-cout-achat-affaire" value=0 min="0" onchange="TotalCoutAchatAffaire();TotalAchat()">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-cout-achat-affaire" class="form-control" id="qte-cout-achat-affaire" value=0 onchange="TotalCoutAchatAffaire();TotalAchat()">
+                            <div class="input-group mb-3">
+                                <select class="form-select" id="qte-cout-achat-affaire" onchange="TotalCoutAchatAffaire();TotalAchat()">
+                                    <option value="0Pourcent">0</option>
+                                    <option value="5Pourcent">5</option>
+                                    <option value="10Pourcent">10</option>
+                                    <option value="15Pourcent">15</option>
+                                    <option value="20Pourcent">20</option>
+                                    <option value="25Pourcent">25</option>
+                                    <option value="30Pourcent">30</option>
+                                </select>
+                                <label class="input-group-text" for="type-session">%</label>
+                            </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-cout-achat-affaire" class="form-control" id="total-cout-achat-affaire" readonly="true" value=0 >
+                                <input type="number" name="total-cout-achat-affaire" class="form-control" id="total-cout-achat-affaire" readonly="true" value=0 min="0" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
@@ -480,41 +500,228 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="montant-cout-achat-autres" class="form-control" id="montant-cout-achat-autres" value=0 onchange="TotalCoutAchatAutres();TotalAchat()">
+                                <input type="number" name="montant-cout-achat-autres" class="form-control" id="montant-cout-achat-autres" value=0 min="0" onchange="TotalCoutAchatAutres();TotalAchat()">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-cout-achat-autres" class="form-control" id="qte-cout-achat-autres" value=0 onchange="TotalCoutAchatAutres();TotalAchat()">
+                            <input type="number" name="qte-cout-achat-autres" class="form-control" id="qte-cout-achat-autres" value=0 min="0" onchange="TotalCoutAchatAutres();TotalAchat()">
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-cout-achat-autres" class="form-control" id="total-cout-achat-autres" readonly="true" value=0 >
+                                <input type="number" name="total-cout-achat-autres" class="form-control" id="total-cout-achat-autres" readonly="true" value=0 min="0" >
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
                     </div>
                     <!-- Total des coûts d'achat -->
-                    <div class="row justify-content-md-center">
-                        <div class="col">
-                            <label for="total-couts" class="form-label">Total des coûts de fonctionnement</label>
-                        </div>
-                        <div class="col-lg-2">
-                            <!--<div class="input-group mb-3">
-                                <input type="number" name="montant-total-ventes" class="form-control" id="montant-total-ventes" readonly="true" value=0 >
-                                <span class="input-group-text">€</span>
-                            </div>-->
-                        </div>
-                        <div class="col-lg-2">
-                            <!--<input type="number" name="qte-total-ventes" class="form-control" id="qte-total-ventes" readonly="true" value=0 >-->
-                        </div>
-                        <div class="col-lg-2">
+                    <div class="row justify-content-md-end">
+                        <div class="col-6">
                             <div class="input-group mb-3">
-                                <input type="number" name="total-total-couts" class="form-control" id="total-total-couts" readonly="true" value=0 >
-                                <span class="input-group-text">€</span>
+                                <span class="input-group-text">Total des achats</span>
+                                <input type="number" name="total-total-couts" class="form-control" id="total-total-couts" readonly="true" value="0" min="0" >
+                                <label class="input-group-text" for="total-total-couts">€</label>
                             </div>
                         </div>
                     </div>
+
+                    <!-- 
+                    SECTION COÛT DE FONCTIONNEMENT    
+                    Titres de la 1ère ligne des coûts de fonctionnement
+                    -->
+                    <div class="row justify-content-md-center">
+                        <!-- dénomination des titres -->
+                        <div class="col"></div>
+                        <div class="col-lg-2">
+                            <span class="titre-col-chiffrage">Durée</span>
+                        </div>
+                        <div class="col-lg-2">
+                            <span class="titre-col-chiffrage">Coût Horaire</span>
+                        </div>
+                        <div class="col-lg-2">
+                            <span class="titre-col-chiffrage">Montant</span>
+                        </div>
+                    </div>
+                    <!-- 
+                        Contenu des lignes des coûts 
+                    -->
+                    <!-- Coût adminsitratif formation -->
+                    <div class="row justify-content-md-center">
+                        <div class="col">
+                            <label for="cout-admin-form" class="form-label">Coût administratif formation</label>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                                <select class="form-select" id="cout-admin-form-duree" onchange="TotalCoutAdminDuree();TotalFonctionnement()">
+                                    <option value="1">0</option>
+                                    <option value="2">15</option>
+                                    <option value="3">30</option>
+                                    <option value="4">45</option>
+                                    <option value="5">60</option>
+                                    <option value="6">75</option>
+                                    <option value="7">90</option>
+                                    <option value="8">105</option>
+                                    <option value="9">120</option>
+                                </select>
+                                <label class="input-group-text" for="cout-admin-form-duree">mn</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                                <input type="number" name="cout-admin-form-horaire" class="form-control" id="cout-admin-form-horaire" value="<?php echo $coutAdminFormation ?>" min="0" readonly="true">
+                                <label class="input-group-text" for="cout-admin-form-horaire">€</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                                <input type="number" name="cout-admin-form-montant" class="form-control" id="cout-admin-form-montant" readonly="true" value="0" min="0" >
+                                <label class="input-group-text" for="cout-admin-form-montant">€</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Coût comptabilité -->
+                    <div class="row justify-content-md-center">
+                        <div class="col">
+                            <label for="cout-compta" class="form-label">Coût comptabilité</label>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                                <select class="form-select" id="cout-compta-duree" onchange="TotalCoutComptaDuree();TotalFonctionnement()">
+                                    <option value="1">0</option>
+                                    <option value="2">15</option>
+                                    <option value="3">30</option>
+                                    <option value="4">45</option>
+                                    <option value="5">60</option>
+                                    <option value="6">75</option>
+                                    <option value="7">90</option>
+                                    <option value="8">105</option>
+                                    <option value="9">120</option>
+                                </select>
+                                <label class="input-group-text" for="cout-compta-duree">mn</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                            <input type="number" name="cout-compta-horaire" class="form-control" id="cout-compta-horaire" value="<?php echo $coutCompta ?>" min="0" readonly="true">
+                                <label class="input-group-text" for="cout-compta-horaire">€</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                                <input type="number" name="cout-compta-montant" class="form-control" id="cout-compta-montant" readonly="true" value="0" min="0" >
+                                <label class="input-group-text" for="cout-compta-motnant">€</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Coût service informatique -->
+                    <div class="row justify-content-md-center">
+                        <div class="col">
+                            <label for="cout-service-informatique" class="form-label">Coût service informatique</label>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                                <select class="form-select" id="cout-service-informatique-duree" onchange="TotalCoutServiceInformatiqueDuree();TotalFonctionnement()">
+                                    <option value="1">0</option>
+                                    <option value="2">15</option>
+                                    <option value="3">30</option>
+                                    <option value="4">45</option>
+                                    <option value="5">60</option>
+                                    <option value="6">75</option>
+                                    <option value="7">90</option>
+                                    <option value="8">105</option>
+                                    <option value="9">120</option>
+                                </select>
+                                <label class="input-group-text" for="cout-service-informatique-duree">mn</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                            <input type="number" name="cout-service-informatique-horaire" class="form-control" id="cout-service-informatique-horaire" value="<?php echo $coutServiceInformatique ?>" min="0" readonly="true">
+                                <label class="input-group-text" for="cout-service-informatique-horaire">€</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                                <input type="number" name="cout-service-informatique-montant" class="form-control" id="cout-service-informatique-montant" readonly="true" value="0" min="0" >
+                                <label class="input-group-text" for="cout-service-informatique-montant">€</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Coût autres -->
+                    <div class="row justify-content-md-center">
+                        <div class="col">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Autres</span>
+                                <input type="text" name="texte-cout-fonctionnement-autres" class="form-control" id="texte-cout-fonctionnement-autres" >
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                                <select class="form-select" id="cout-autres-duree" onchange="TotalCoutAutresDuree();TotalFonctionnement()">
+                                    <option value="1">0</option>
+                                    <option value="2">15</option>
+                                    <option value="3">30</option>
+                                    <option value="4">45</option>
+                                    <option value="5">60</option>
+                                    <option value="6">75</option>
+                                    <option value="7">90</option>
+                                    <option value="8">105</option>
+                                    <option value="9">120</option>
+                                </select>
+                                <label class="input-group-text" for="cout-autres-duree">mn</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                            <input type="number" name="cout-autres-horaire" class="form-control" id="cout-autres-horaire" value="0" min="0" step="0.01" onchange="TotalCoutAutresDuree();TotalFonctionnement()">
+                                <label class="input-group-text" for="cout-autres-horaire">€</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group mb-3">
+                                <input type="number" name="cout-autres-montant" class="form-control" id="cout-autres-montant" readonly="true" value="0" min="0" >
+                                <label class="input-group-text" for="cout-autres-montant">€</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Total des coûts de fonctionnement -->
+                    <div class="row justify-content-md-end">
+                        <div class="col-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Total des coûts de fonctionnement</span>
+                                <input type="number" name="cout-fonctionnement-total" class="form-control" id="cout-fonctionnement-total" readonly="true" value="0" min="0" >
+                                <label class="input-group-text" for="cout-fonctionnement-total">€</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION SYNTHÈSE -->
+                    <div class="col d-flex justify-content-end">
+                        <div class="card text-center col-6">
+                            <div class="card-header bg-secondary"><h3>Synthèse</h3></div>    
+                            <div class="card-body">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Ventes</span>
+                                    <input type="number" name="row-total-ventes" class="form-control" id="row-total-ventes" readonly="true" value="0" min="0" >
+                                    <label class="input-group-text" for="row-total-ventes">€</label>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Achats + Fonctionnement</span>
+                                    <input type="number" name="row-total-achats-fonctionnement" class="form-control" id="row-total-achats-fonctionnement" readonly="true" value="0" min="0" >
+                                    <label class="input-group-text" for="row-total-ventes">€</label>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Marge</span>
+                                    <input type="number" name="row-total-marge" class="form-control" id="row-total-marge" readonly="true" value="0" min="0" >
+                                    <label class="input-group-text" for="row-total-marge">€</label>
+                                    <input type="number" name="row-total-marge-pourcentage" class="form-control" id="row-total-marge-pourcentage" readonly="true" value="0" min="0" >
+                                    <label class="input-group-text" for="row-total-marge-pourcentage">%</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Bouton d'édition du devis -->          
                     <div class="col btn-justify-content-end">
                         <input class="btn btn-primary" type="submit" value="Éditer le devis" name="edit-devis"></input>
@@ -607,6 +814,20 @@
         dureeFormationHeure = document.querySelector("#duree-formation-heure").value;
         document.querySelector("#qte-cout-achat-jour-presta").value = dureeFormationHeure;
     }
+
+    /*******************************************************\
+        Recopie du nombre de participants dans la phase
+        Chiffrage dans les champs quantité du :
+        - Coût d'achat des certifications
+        - Coût d'achat journalier de la location de salle
+    \*******************************************************/
+    function CopyNbParticipants(){
+        nbParticipants = document.querySelector("#nb_participants").value;
+        document.querySelector("#qte-cout-achat-certifs").value = nbParticipants;
+        document.querySelector("#qte-cout-achat-location").value = nbParticipants;
+        document.querySelector("#qte-prix-vente-certifs").value = nbParticipants;
+    }
+
     /*******************************************************\
         Gestion de la recopie des données de la formation
         en fonction de la formation sélectionnée
@@ -627,63 +848,65 @@
     /*******************************************************\
         Gestion des calculs de la phase Chiffrage
     \*******************************************************/
-    // calcul du prix de vente journalier de la formation
+    // calcul du Prix de vente journalier de la formation
     function TotalPrixVenteJourForm(){
-        // récupération de la valeur du champ montant du Prix de vente journalier de la formation
+        // récupération de la valeur du champ "montant"
         selectMontantVenteJour = document.getElementById("montant-prix-vente-jour-form");
         valeurMontantVenteJour = parseFloat(selectMontantVenteJour.value);
-        // récupération de la valeur du champ quantité du Prix de vente journalier de la formation
+        // récupération de la valeur du champ "quantité"
         selectQteVenteJour = document.getElementById("qte-prix-vente-jour-form");
         valeurQteVenteJour = parseFloat(selectQteVenteJour.value);
-        //calcul du total du Prix de vente journalier de la formation
-        totalJourForm = valeurMontantVenteJour * valeurQteVenteJour;
-        document.getElementById('total-prix-vente-jour-form').value = totalJourForm.toFixed(2);
+        //calcul du total
+        totalJourFormateur = valeurMontantVenteJour * valeurQteVenteJour;
+        document.getElementById('total-prix-vente-jour-form').value = totalJourFormateur.toFixed(2);
     }
-    // calcul du prix de vente des supports de cours
+    // calcul du Prix de vente des supports de cours
     function TotalPrixVenteSupportsCours(){
-        // récupération de la valeur du champ montant du Prix de vente des supports de cours
+        // récupération de la valeur du champ "montant"
         selectMontantVenteSupportsCours = document.getElementById("montant-prix-vente-supports-cours");
         valeurMontantVenteSupportsCours = parseFloat(selectMontantVenteSupportsCours.value);
-        // récupération de la valeur du champ quantité du Prix de vente des supports de cours
+        // récupération de la valeur du champ "quantité"
         selectQteVenteSupportsCours = document.getElementById("qte-prix-vente-supports-cours");
         valeurQteVenteSupportsCours = parseFloat(selectQteVenteSupportsCours.value);
-        //calcul du total du Prix de vente des supports de cours
-        totalSupportsCours = valeurMontantVenteSupportsCours * valeurQteVenteSupportsCours;
-        document.getElementById('total-prix-vente-supports-cours').value = totalSupportsCours.toFixed(2);
+        //calcul du total
+        totalVenteSupportsCours = valeurMontantVenteSupportsCours * valeurQteVenteSupportsCours;
+        document.getElementById('total-prix-vente-supports-cours').value = totalVenteSupportsCours.toFixed(2);
     }
-    // calcul du prix de vente des plateaux repas
+    // calcul du Prix de vente des plateaux repas
     function TotalPrixVenteRepas(){
-        // récupération de la valeur du champ montant du Prix de vente des plateaux repas
+        // récupération de la valeur du champ "montant"
         selectMontantVenteRepas = document.getElementById("montant-prix-vente-repas");
         valeurMontantVenteRepas = parseFloat(selectMontantVenteRepas.value);
-        // récupération de la valeur du champ quantité du Prix de vente des plateaux repas
+        // récupération de la valeur du champ "quantité"
         selectQteVenteRepas = document.getElementById("qte-prix-vente-repas");
         valeurQteVenteRepas = parseFloat(selectQteVenteRepas.value);
-        //calcul du total du Prix de vente des plateaux repas
-        totalRepas = valeurMontantVenteSupportsCours * valeurQteVenteSupportsCours;
-        document.getElementById('total-prix-vente-repas').value = totalRepas.toFixed(2);
+        //calcul du total
+        totalVenteRepas = valeurMontantVenteRepas * valeurQteVenteRepas;
+        document.getElementById('total-prix-vente-repas').value = totalVenteRepas.toFixed(2);
     }
     // calcul du prix de vente des certifications
     function TotalPrixVenteCertifs(){
-        // récupération de la valeur du champ montant du Prix de vente des certifications
+        // récupération de la valeur du champ "montant" du Prix de vente des certifications"
         selectMontantVenteCertifs = document.getElementById("montant-prix-vente-certifs");
         valeurMontantVenteCertifs = selectMontantVenteCertifs.value;
-        // récupération de la valeur du champ quantité du Prix de vente des certifications
+        // récupération de la valeur du champ "quantité"
         selectQteVenteCertifs = document.getElementById("qte-prix-vente-certifs");
         valeurQteVenteCertifs = selectQteVenteCertifs.value;
-        //calcul du total du Prix de vente des certifications
-        document.getElementById('total-prix-vente-certifs').value = valeurMontantVenteCertifs * valeurQteVenteCertifs;
+        //calcul du total
+        totalVenteCertif = valeurMontantVenteCertifs * valeurQteVenteCertifs;
+        document.getElementById('total-prix-vente-certifs').value = totalVenteCertif.toFixed(2);
     }
     // calcul du prix de vente autres
     function TotalPrixVenteAutres(){
-        // récupération de la valeur du champ montant du Prix de vente autres
+        // récupération de la valeur du champ "montant"
         selectMontantVenteAutres = document.getElementById("montant-prix-vente-autres");
         valeurMontantVenteAutres = selectMontantVenteAutres.value;
-        // récupération de la valeur du champ quantité du Prix de vente autres
+        // récupération de la valeur du champ "quantité"
         selectQteVenteAutres = document.getElementById("qte-prix-vente-autres");
         valeurQteVenteAutres = selectQteVenteAutres.value;
-        //calcul du total du Prix de vente autres
-        document.getElementById('total-prix-vente-autres').value = valeurMontantVenteAutres * valeurQteVenteAutres;
+        //calcul du total
+        totalVenteAutres = valeurMontantVenteAutres * valeurQteVenteAutres;
+        document.getElementById('total-prix-vente-autres').value = totalVenteAutres.toFixed(2);
     }
     // calcul du total des ventes
     function TotalChiffrage(){
@@ -704,10 +927,225 @@
         valeurTotalVenteautres = parseFloat(selectTotalVenteautres.value);
 
         //calcul du total de toutes les quantité du Prix de vente journalier de la formation
-        totalVente = valeurTotalVenteJour + valeurTotalVenteSupportsCours + valeurTotalVenteRepas + valeurTotalVenteCertifs + valeurTotalVenteautres
+        totalVente = valeurTotalVenteJour + valeurTotalVenteSupportsCours + valeurTotalVenteRepas + valeurTotalVenteCertifs + valeurTotalVenteautres;
         document.getElementById('total-total-ventes').value = totalVente.toFixed(2);
+
+        //recopie du total des ventes dans la synthèse
+        document.getElementById('row-total-ventes').value = totalVente.toFixed(2);
+
+        // calcul de la marge
+        totalVentes = parseFloat(document.getElementById('total-total-ventes').value);
+        marge = totalVentes - totalAchatsFonctionnement;
+        document.getElementById('row-total-marge').value = marge.toFixed(2);
+        totalMarge = parseFloat(document.getElementById('row-total-marge').value);
+        margePourcentage = (totalMarge / totalVentes) * 100;
+        document.getElementById('row-total-marge-pourcentage').value = margePourcentage.toFixed(2);
     }
-    function addSite() {
-        window.location = '../ajouter-un-site';
+
+    // calcul du Coût d'achat journalier de la prestation du formateur
+    function TotalCoutAchatJourPresta(){
+        // récupération de la valeur du champ "montant"
+        selectMontantAchatJour = document.getElementById("montant-cout-achat-jour-presta");
+        valeurMontantAchatJour = parseFloat(selectMontantAchatJour.value);
+        // récupération de la valeur du champ "quantité"
+        selectQteAchatJour = document.getElementById("qte-cout-achat-jour-presta");
+        valeurQteAchatJour = parseFloat(selectQteAchatJour.value);
+        //calcul du total
+        totalJourPresta = valeurMontantAchatJour * valeurQteAchatJour;
+        document.getElementById('total-cout-achat-jour-presta').value = totalJourPresta.toFixed(2);
+    }
+    // calcul du Coût d'achat des supports de cours
+    function TotalCoutAchatSupportsCours(){
+        // récupération de la valeur du champ "montant"
+        selectMontantAchatSupportsCours = document.getElementById("montant-cout-achat-supports-cours");
+        valeurMontantAchatSupportsCours = parseFloat(selectMontantAchatSupportsCours.value);
+        // récupération de la valeur du champ "quantité"
+        selectQteAchatSupportsCours = document.getElementById("qte-cout-achat-supports-cours");
+        valeurQteAchatSupportsCours = parseFloat(selectQteAchatSupportsCours.value);
+        //calcul du total
+        totalAchatSupportsCours = valeurMontantAchatSupportsCours * valeurQteAchatSupportsCours;
+        document.getElementById('total-cout-achat-supports-cours').value = totalAchatSupportsCours.toFixed(2);
+    }
+    // calcul du Coût d'achat des plateaux repas
+    function TotalCoutAchatRepas(){
+        // récupération de la valeur du champ "montant"
+        selectMontantAchatRepas = document.getElementById("montant-cout-achat-repas");
+        valeurMontantAchatRepas = parseFloat(selectMontantAchatRepas.value);
+        // récupération de la valeur du champ "quantité"
+        selectQteAchatRepas = document.getElementById("qte-cout-achat-repas");
+        valeurQteAchatRepas = parseFloat(selectQteAchatRepas.value);
+        //calcul du total
+        totalAchatRepas = valeurMontantAchatRepas * valeurQteAchatRepas;
+        document.getElementById('total-cout-achat-repas').value = totalAchatRepas.toFixed(2);
+    }
+    // calcul du Coût d'achat des certifications
+    function TotalCoutAchatCertifs(){
+        // récupération de la valeur du champ "montant"
+        selectMontantAchatCertifs = document.getElementById("montant-cout-achat-certifs");
+        valeurMontantAchatCertifs = selectMontantAchatCertifs.value;
+        // récupération de la valeur du champ "quantité"
+        selectQteAchatCertifs = document.getElementById("qte-cout-achat-certifs");
+        valeurQteAchatCertifs = selectQteAchatCertifs.value;
+        //calcul du total
+        totalAchatCertifs = valeurMontantAchatCertifs * valeurQteAchatCertifs;
+        document.getElementById('total-cout-achat-certifs').value = totalAchatCertifs.toFixed(2);
+    }
+    // calcul du Coût d'achat journalier de la location de salle
+    function TotalCoutAchatLocation(){
+        // récupération de la valeur du champ "montant"
+        selectMontantAchatLoca = document.getElementById("montant-cout-achat-location");
+        valeurMontantAchatLoca = selectMontantAchatLoca.value;
+        // récupération de la valeur du champ "quantité"
+        selectQteAchatLoca = document.getElementById("qte-cout-achat-location");
+        valeurQteAchatLoca = selectQteAchatLoca.value;
+        //calcul du total
+        totalAchatLoca = valeurMontantAchatLoca * valeurQteAchatLoca;
+        document.getElementById('total-cout-achat-location').value = totalAchatLoca.toFixed(2);
+    }
+    // calcul du Coût apport d'affaires
+    function TotalCoutAchatAffaire(){
+        // récupération de la valeur du champ "montant"
+        selectMontantAchatAffaires = document.getElementById("montant-cout-achat-affaire");
+        valeurMontantAchatAffaires = selectMontantAchatAffaires.value;
+        // récupération de la valeur du champ "quantité"
+        selectQteAchatAffaires = document.getElementById("qte-cout-achat-affaire");
+        valeurQteAchatAffaires = selectQteAchatAffaires.options[selectQteAchatAffaires.selectedIndex].text;
+        //calcul du total
+        totalAchatAffaires = valeurMontantAchatAffaires * (valeurQteAchatAffaires / 100);
+        document.getElementById('total-cout-achat-affaire').value = totalAchatAffaires.toFixed(2);
+    }
+    // calcul du prix de vente autres
+    function TotalCoutAchatAutres(){
+        // récupération de la valeur du champ "montant"
+        selectMontantAchatAutres = document.getElementById("montant-cout-achat-autres");
+        valeurMontantAchatAutres = selectMontantAchatAutres.value;
+        // récupération de la valeur du champ "quantité"
+        selectQteAchatAutres = document.getElementById("qte-cout-achat-autres");
+        valeurQteAchatAutres = selectQteAchatAutres.value;
+        //calcul du total
+        totalAchatAutres = valeurMontantAchatAutres * valeurQteAchatAutres;
+        document.getElementById('total-cout-achat-autres').value = totalAchatAutres.toFixed(2);
+    }
+    // calcul du total des achats
+    function TotalAchat(){
+        // récupération de la valeur du total Coût d'achat journalier de la prestation du formateur
+        selectTotalAchatJour = document.getElementById("total-cout-achat-jour-presta");
+        valeurTotalAchatJour = parseFloat(selectTotalAchatJour.value);
+        // récupération de la valeur du total Coût d'achat des supports de cours
+        selectTotalAchatSupportsCours = document.getElementById("total-cout-achat-supports-cours");
+        valeurTotalAchatSupportsCours = parseFloat(selectTotalAchatSupportsCours.value);
+        // récupération de la valeur du total Coût d'achat des plateaux repas
+        selectTotalAchatRepas = document.getElementById("total-cout-achat-repas");
+        valeurTotalAchatRepas = parseFloat(selectTotalAchatRepas.value);
+        // récupération de la valeur du total Coût d'achat des certifications
+        selectTotalAchatCertifs = document.getElementById("total-cout-achat-certifs");
+        valeurTotalAchatCertifs = parseFloat(selectTotalAchatCertifs.value);
+        // récupération de la valeur du total du Coût d'achat journalier de la location de salle
+        selectTotalAchatLocation = document.getElementById("total-cout-achat-location");
+        valeurTotalAchatLocation = parseFloat(selectTotalAchatLocation.value);
+        // récupération de la valeur du total du Coût apport d'affaires
+        selectTotalAchatAffaire = document.getElementById("total-cout-achat-affaire");
+        valeurTotalAchatAffaire = parseFloat(selectTotalAchatAffaire.value);
+        // récupération de la valeur de tous les champs total du Prix de vente autres
+        selectTotalAchatautres = document.getElementById("total-cout-achat-autres");
+        valeurTotalAchatautres = parseFloat(selectTotalAchatautres.value);
+
+        // calcul du total de toutes les quantité du Prix de vente journalier de la formation
+        totalAchat = valeurTotalAchatJour + valeurTotalAchatSupportsCours + valeurTotalAchatRepas + valeurTotalAchatCertifs + valeurTotalAchatLocation + valeurTotalAchatAffaire + valeurTotalAchatautres;
+        document.getElementById('total-total-couts').value = totalAchat.toFixed(2);
+
+        // calcul du total des achats + fonctionnement
+        totalCoutFonctionnement = parseFloat(document.getElementById('cout-fonctionnement-total').value);
+        totalAchatsFonctionnement = totalAchat + totalCoutFonctionnement;
+        document.getElementById('row-total-achats-fonctionnement').value = totalAchatsFonctionnement.toFixed(2);
+
+        // calcul de la marge
+        totalVentes = parseFloat(document.getElementById('total-total-ventes').value);
+        marge = totalVentes - totalAchatsFonctionnement;
+        document.getElementById('row-total-marge').value = marge.toFixed(2);
+        totalMarge = parseFloat(document.getElementById('row-total-marge').value);
+        margePourcentage = (totalMarge / totalVentes) * 100;
+        document.getElementById('row-total-marge-pourcentage').value = margePourcentage.toFixed(2);
+    }
+
+    // calcul du Coût administratif formation
+    function TotalCoutAdminDuree(){
+        // récupération de la valeur du champ "durée"
+        selectAdminDuree = document.getElementById("cout-admin-form-duree");
+        valeurAdminDuree = selectAdminDuree.options[selectAdminDuree.selectedIndex].text;
+        // récupération de la valeur du champ "Coût Horaire"
+        selectAdminCoutHoraire = document.getElementById("cout-admin-form-horaire");
+        valeurAdminCoutHoraire = selectAdminCoutHoraire.value;
+        //calcul du total
+        totalCoutAdmin = (valeurAdminDuree / 60) * valeurAdminCoutHoraire;
+        document.getElementById('cout-admin-form-montant').value = totalCoutAdmin.toFixed(2);
+    }
+    // calcul du Coût comptabilité
+    function TotalCoutComptaDuree(){
+        // récupération de la valeur du champ "durée"
+        selectComptaDuree = document.getElementById("cout-compta-duree");
+        valeurComptaDuree = selectComptaDuree.options[selectComptaDuree.selectedIndex].text;
+        // récupération de la valeur du champ "Coût Horaire"
+        selectComptaCoutHoraire = document.getElementById("cout-compta-horaire");
+        valeurComptaCoutHoraire = selectComptaCoutHoraire.value;
+        //calcul du total
+        totalCoutCompta = (valeurComptaDuree / 60) * valeurComptaCoutHoraire;
+        document.getElementById('cout-compta-montant').value = totalCoutCompta.toFixed(2);
+    }
+    // calcul du Coût service informatique
+    function TotalCoutServiceInformatiqueDuree(){
+        // récupération de la valeur du champ "durée"
+        selectServiceInformatiqueDuree = document.getElementById("cout-service-informatique-duree");
+        valeurServiceInformatiqueDuree = selectServiceInformatiqueDuree.options[selectServiceInformatiqueDuree.selectedIndex].text;
+        // récupération de la valeur du champ "Coût Horaire"
+        selectServiceInformatiqueCoutHoraire = document.getElementById("cout-service-informatique-horaire");
+        valeurServiceInformatiqueCoutHoraire = selectServiceInformatiqueCoutHoraire.value;
+        //calcul du total
+        totalCoutServiceInformatique = (valeurServiceInformatiqueDuree / 60) * valeurServiceInformatiqueCoutHoraire;
+        document.getElementById('cout-service-informatique-montant').value = totalCoutServiceInformatique.toFixed(2);
+    }
+    // calcul du Coût autres
+    function TotalCoutAutresDuree(){
+        // récupération de la valeur du champ "durée"
+        selectAutresDuree = document.getElementById("cout-autres-duree");
+        valeurAutresDuree = selectAutresDuree.options[selectAutresDuree.selectedIndex].text;
+        // récupération de la valeur du champ "Coût Horaire"
+        selectAutresCoutHoraire = document.getElementById("cout-autres-horaire");
+        valeurAutresCoutHoraire = selectAutresCoutHoraire.value;
+        //calcul du total
+        totalCoutAutres = (valeurAutresDuree / 60) * valeurAutresCoutHoraire;
+        document.getElementById('cout-autres-montant').value = totalCoutAutres.toFixed(2);
+    }
+    // calcul du total des des coûts de fonctionnement
+    function TotalFonctionnement(){
+        // récupération de la valeur du total Coût administratif formation
+        selectTotalAdmin = document.getElementById("cout-admin-form-montant");
+        valeurTotalAdmin = parseFloat(selectTotalAdmin.value);
+        // récupération de la valeur du total Coût comptabilité
+        selectTotalCompta = document.getElementById("cout-compta-montant");
+        valeurTotalCompta = parseFloat(selectTotalCompta.value);
+        // récupération de la valeur du total Coût service informatique
+        selectTotalServiceInformatique = document.getElementById("cout-service-informatique-montant");
+        valeurTotalServiceInformatique = parseFloat(selectTotalServiceInformatique.value);
+        // récupération de la valeur du total des autres coûts
+        selectTotalAutres = document.getElementById("cout-autres-montant");
+        valeurTotalAutres = parseFloat(selectTotalAutres.value);
+
+        //calcul du total de tous les montants des coûts de fonctionnement
+        totalCoutFonctionnement = valeurTotalAdmin + valeurTotalCompta + valeurTotalServiceInformatique + valeurTotalAutres;
+        document.getElementById('cout-fonctionnement-total').value = totalCoutFonctionnement.toFixed(2);
+
+        //calcul du total des achats + fonctionnement
+        totalAchat = parseFloat(document.getElementById('total-total-couts').value);
+        totalAchatsFonctionnement = totalAchat + totalCoutFonctionnement;
+        document.getElementById('row-total-achats-fonctionnement').value = totalAchatsFonctionnement.toFixed(2);
+
+        // calcul de la marge
+        totalVentes = parseFloat(document.getElementById('total-total-ventes').value);
+        marge = totalVentes - totalAchatsFonctionnement;
+        document.getElementById('row-total-marge').value = marge.toFixed(2);
+        totalMarge = parseFloat(document.getElementById('row-total-marge').value);
+        margePourcentage = (totalMarge / totalVentes) * 100;
+        document.getElementById('row-total-marge-pourcentage').value = margePourcentage.toFixed(2);
     }
 </script>
