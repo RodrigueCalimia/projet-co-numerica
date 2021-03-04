@@ -2,10 +2,41 @@
 <?php
     // connexion à la base de donnée
     global $wpdb;
+    // récupération des données de la table wp_devis contenant les devis
+    $lesDevis = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis'));
+    // récupération des données de la table wp_type_personne contenant les types des personnes
+    $lesTypesPersonnes = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_type_personne'));
     // récupération des données de la table wp_sites contenant les lieux de formations
     $lesLieuxFormation = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_sites'));
+    // détermination du n° de devis
+    if($lesDevis){
+        foreach ($lesDevis as $leDevis){
+            $sufixeNumDevis = $leDevis->ID_DEVIS;
+        }
+    } else {
+        $sufixeNumDevis = 1;
+    }
+    $numDevis = "NUMFORM".str_pad($sufixeNumDevis, 4, 0, STR_PAD_LEFT);
+    // récupération des données de la table wp_entreprises_opco contenant les entreprises et les OPCO
+    $lesEntreprisesOpco = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_entreprises_opco'));
+    // récupération des données de la table wp_personnes contenant les personnes
+    $lesPersonnes = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_personnes'));
+    $tabPersonneidEntOpco1  = "var tabPersonneidEntOpco2 = Array()\n";
+    $tabPersonneType1       = "var tabPersonneType2 = Array()\n";
+    $tabPersonneNom1        = "var tabPersonneNom2 = Array()\n";
+    $tabPersonnePrenom1     = "var tabPersonnePrenom2 = Array()\n";
+    $cptTable = 0;
+    foreach ($lesPersonnes as $laPersonne){
+        // stockage des données dans une varaible
+        $tabPersonneidEntOpco1  = $tabPersonneidEntOpco1."tabPersonneidEntOpco2[".$cptTable."]='".$laPersonne->ID_ENT_OPCO."'\n";
+        $tabPersonneType1       = $tabPersonneType1."tabPersonneType2[".$cptTable."]='".$laPersonne->TYPE_PERSONNE."'\n";
+        $tabPersonneNom1        = $tabPersonneNom1."tabPersonneNom2[".$cptTable."]='".$laPersonne->NOM_PERSONNE."'\n";
+        $tabPersonnePrenom1     = $tabPersonnePrenom1."tabPersonnePrenom2[".$cptTable."]='".$laPersonne->PRENOM_PERSONNE."'\n";
+        $cptTable += 1;
+        //$idEntOpcoPersonne  = $laPersonne->ID_ENT_OPCO;
+    }
     // récupération des données de la table wp_formations contenant les formations
-    $lesLormations = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_formations'));
+    $lesFormations = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_formations'));
     // récupération des données de la table wp_cout_fonctionnement contenant les coûts de fonctionnement
     $lesCoutsFonctionnement = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_cout_fonctionnement'));
     // stockage des doonées dans les variables
@@ -52,6 +83,8 @@
         echo "<script>alert('Le devis ".$numFormation." a bien été éditer !');</script>";
         echo "<>window.location = '" .site_url("/les-devis")."'</>";
     }
+    // date du jour mise dans une variable
+    $dateToday = date("d/m/Y");
 ?>
 
 <div class="main">
@@ -70,7 +103,79 @@
         <div class="tab-content" id="nav-tabContent">
             <!-- Contenu de l'onglet Client -->
             <div class="tab-pane fade show active" id="nav-client" role="tabpanel" aria-labelledby="nav-client-tab">
-                Fomulaire client
+                <!-- Numéro du devis -->
+                <div class="col-md-6">
+                    <label for="numFormation" class="form-time-label">Numéro</label>
+                    <input type="text" name="numFormation" class="form-control"  id="numFormation" readonly="true" value="<?php echo $numDevis ?>" >
+                </div>
+                <!-- Choix de la date -->
+                <div class="col-md-6">
+                    <label for="dateFormation" class="form-label">Date</label>
+                    <input type="date" name="dateFormation" class="form-control" id="dateFormation" required value="" >
+                </div>
+                <!-- Choix de l'entreprise -->
+                <div class="col-md-6">
+                    <label for="listeEntreprise" class="form-label"> Entreprise </label>
+                    <div class="input-group mb-3">
+                        <select class="form-select" aria-label="Default select example" onchange="SelectEntreprise();" id="listeEntreprise">
+                            <option></option>
+                            <?php foreach ($lesEntreprisesOpco as $lEntrepriseOpco):
+                                // stockage des données dans une varaible
+                                $idEntrepriseOpco    = $lEntrepriseOpco->ID_ENT_OPCO;
+                                $nomEntrepriseOpco    = $lEntrepriseOpco->NOM_ENT_OPCO;?>
+                                <option value="<?php echo  $idEntrepriseOpco;?>"><?php echo  $nomEntrepriseOpco;?></option>
+                            <?php endforeach;?>
+                        </select>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addEntreprise" data-bs-whatever="@getbootstrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- <button class="btn btn-secondary" type="button" onclick="addEntreprise()">Ajouter une entreprise</button> -->
+                </div>
+                <!-- Choix de l'interlocuteur -->
+                <div class="col-md-6">
+                    <label for="listeInterlocuteur" class="form-label">Interlocuteur</label>
+                    <div class="input-group mb-3">
+                        <select class="form-select" aria-label="Default select example" id="listeInterlocuteur">
+                        </select>      
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addInterlocuteur" data-bs-whatever="@getbootstrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                        </button>
+                    </div>              
+                    <!-- <button class="btn btn-secondary" type="button" onclick="addInterlocuteur()">Ajouter un interlocuteur</button> -->
+                </div>
+                <!-- Choix du responsable formation -->
+                <div class="col-md-6">
+                    <label for="listeRespFormation" class="form-label">Responsable Formation</label>
+                    <div class="input-group mb-3">
+                        <select class="form-select" aria-label="Default select example" id="listeRespFormation">
+                            <option></option>
+                            <?php foreach ($lesPersonnes as $laPersonne):
+                                // stockage des données dans une varaible
+                                $nomPersonne    = $laPersonne->NOM_PERSONNE;
+                                $prenomPersonne = $laPersonne->PRENOM_PERSONNE;
+                                $typePersonne   = $laPersonne->TYPE_PERSONNE;
+                                // ajout à la liste que les responsables formation
+                                if ($typePersonne == "Responsable formation"):
+                                ?> 
+                                <option><?php echo  ($prenomPersonne .' '.$nomPersonne);?></option>
+                            <?php endif; endforeach;?>
+                        </select>      
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addRespFormation" data-bs-whatever="@getbootstrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                        </button>
+                    </div>               
+                    <!-- <button class="btn btn-secondary" type="button" onclick="addResponsable()">Ajouter un responsable</button> -->
+                </div>
             </div>
             <!-- Contenu de l'onglet Pédagogie -->
             <div class="tab-pane fade" id="nav-pedagogie" role="tabpanel" aria-labelledby="nav-pedagogie-tab">
@@ -86,14 +191,14 @@
                             $tabObjProForm1 = "var tabObjProForm2 = Array()\n";
                             $tabParcourPedaPrevi1 = "var tabParcourPedaPrevi2 = Array()\n";
                             
-                            foreach ($formations as $formation): 
-                                $selectForm = $selectForm . "<option value=".$formation->ID_FORMATION.">".$formation->NOM_FORMATION."</option>";
-                                $tabObjForm1 = $tabObjForm1."tabObjForm2[".$formation->ID_FORMATION."]='".$formation->OBJ_FORMATION."'\n";
-                                $tabObjProForm1 = $tabObjProForm1."tabObjProForm2[".$formation->ID_FORMATION."]='".$formation->OBJ_PRO_FORMATION."'\n";
-                                $tabParcourPedaPrevi1 = $tabParcourPedaPrevi1."tabParcourPedaPrevi2[".$formation->ID_FORMATION."]='".$formation->PARCOUR_PEDA_PREVI."'\n";
-                                $tabObjForm2[$formation->ID_FORMATION]=$formation->OBJ_FORMATION;
-                                $tabObjProForm2[$formation->ID_FORMATION]=$formation->OBJ_PRO_FORMATION;
-                                $tabParcourPedaPrevi2[$formation->ID_FORMATION]=$formation->PARCOUR_PEDA_PREVI;
+                            foreach ($lesFormations as $laFormation): 
+                                $selectForm = $selectForm . "<option value=".$laFormation->ID_FORMATION.">".$laFormation->NOM_FORMATION."</option>";
+                                $tabObjForm1 = $tabObjForm1."tabObjForm2[".$laFormation->ID_FORMATION."]='".$laFormation->OBJ_FORMATION."'\n";
+                                $tabObjProForm1 = $tabObjProForm1."tabObjProForm2[".$laFormation->ID_FORMATION."]='".$laFormation->OBJ_PRO_FORMATION."'\n";
+                                $tabParcourPedaPrevi1 = $tabParcourPedaPrevi1."tabParcourPedaPrevi2[".$laFormation->ID_FORMATION."]='".$laFormation->PARCOUR_PEDA_PREVI."'\n";
+                                $tabObjForm2[$laFormation->ID_FORMATION]=$laFormation->OBJ_FORMATION;
+                                $tabObjProForm2[$laFormation->ID_FORMATION]=$laFormation->OBJ_PRO_FORMATION;
+                                $tabParcourPedaPrevi2[$laFormation->ID_FORMATION]=$laFormation->PARCOUR_PEDA_PREVI;
                             endforeach;
                             print $selectForm
                         ?>
@@ -729,6 +834,155 @@
                 </div>
             </div>
         </div>
+        <!-- ZONE DES MODAL POUR LES FORMULAIRES -->
+        <!-- Modal pour l'ajout d'une entreprise dans la liste des Entreprises -->
+        <div class="modal fade" id="addEntreprise" tabindex="-1" aria-labelledby="addEntrepriseLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="col-md-6">
+                            <label for="nom_commercial" class="form-label">Nom commercial</label>
+                            <input type="text" name="nom_commercial" class="form-control" id="nom_commercial" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="adresse-entreprise-opco" class="form-label">Adresse</label>
+                            <input type="text" name="adresse-entreprise-opco" class="form-control" id="adresse-entreprise-opco" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="code_postal-entreprise-opco" class="form-label">Code postal</label>
+                                <input type="number" name="code_postal-entreprise-opco" class="form-control" id="code_postal-entreprise-opco" min="0" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ville-entreprise-opco" class="form-label">Ville</label>
+                                <input type="text" name="ville-entreprise-opco" class="form-control" id="ville-entreprise-opco" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="siret-entreprise-opco" class="form-label">Siret</label>
+                                <input type="text" name="siret-entreprise-opco" class="form-control" id="siret-entreprise-opco" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="naf-entreprise-opco" class="form-label">NAF</label>
+                                <input type="text" name="naf-entreprise-opco" class="form-control" id="naf-entreprise-opco" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="BtnAddEntreprise();" name="create-entreprise">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal pour l'ajout d'un interlocuteur dans la liste des interlocuteurs -->
+        <div class="modal fade" id="addInterlocuteur" tabindex="-1" aria-labelledby="addInterlocuteurLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="nom_personne" class="form-label">Nom</label>
+                                <input type="text" name="nom_personne" class="form-control" id="nom_personne" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="prenom_personne" class="form-label">Prénom</label>
+                                <input type="text" name="prenom_personne" class="form-control" id="prenom_personne" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="email_personne" class="form-label">Email</label>
+                                <input type="text" name="email_personne" class="form-control" id="email_personne" value="" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tel_personne" class="form-label">Téléphone</label>
+                                <input type="text" name="tel_personne" class="form-control" id="tel_personne" value="" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Masqué car pas besoin pour un interlocuteur
+                            <div class="col-md-6">
+                                <label for="kabis_personne" class="form-label">Kabis</label>
+                                <input type="text" name="kabis_personne" class="form-control" id="kabis_personne" value="" required>
+                            </div> -->
+                            <div class="col-md-6">
+                                <label for="type_personne" class="form-label">Type</label>
+                                <select class="form-select" aria-label="Default select example" id="type_personne" value="">
+                                    <option selected>Interlocuteur administratif</option>
+                                    <option>Interlocuteur OPCO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Masqué car pas besoin pour un interlocuteur
+                        <div class="row">
+                            <div class="input-group mb-3 col-md-6">
+                                <label class="input-group-text" for="cv_personne">CV</label>
+                                <input type="file" class="form-control" id="cv_personne">
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="BtnAddInterlocuteur();" name="create-interlocuteur">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal pour l'ajout d'un responsable formation dans la liste des responsables formations -->
+        <div class="modal fade" id="addRespFormation" tabindex="-1" aria-labelledby="addRespFormationLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="nomRespFormation" class="form-label">Nom</label>
+                                <input type="text" name="nomRespFormation" class="form-control" id="nomRespFormation" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="prenomRespFormation" class="form-label">Prénom</label>
+                                <input type="text" name="prenomRespFormation" class="form-control" id="prenomRespFormation" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="emailRespFormation" class="form-label">Email</label>
+                                <input type="text" name="emailRespFormation" class="form-control" id="emailRespFormation" value="" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="telRespFormation" class="form-label">Téléphone</label>
+                                <input type="text" name="telRespFormation" class="form-control" id="telRespFormation" value="" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Masqué car pas besoin pour un interlocuteur
+                            <div class="col-md-6">
+                                <label for="kabisRespFormation" class="form-label">Kabis</label>
+                                <input type="text" name="kabisRespFormation" class="form-control" id="kabisRespFormation" value="" required>
+                            </div> -->
+                            <div class="col-md-6">
+                                <label for="typeRespFormation" class="form-label">Type</label>
+                                <select class="form-select" aria-label="Default select example" id="typeRespFormation" value="">
+                                    <option selected>Responsable formation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Masqué car pas besoin pour un interlocuteur
+                        <div class="row">
+                            <div class="input-group mb-3 col-md-6">
+                                <label class="input-group-text" for="cvRespFormation">CV</label>
+                                <input type="file" class="form-control" id="cvRespFormation">
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="BtnAddRespFormation();" name="create-resp-formation">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Modal pour l'ajout d'un site dans la liste des lieux de la formation -->
         <div class="modal fade" id="addSite" tabindex="-1" aria-labelledby="addSiteLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -763,6 +1017,86 @@
 </div>
 
 <script>
+    /*******************************************************\
+        Gestion de la liste des interlocuteurs en fonction 
+        du choix de l'entreprise
+    \*******************************************************/
+    // déclaration des tableaux contenant les données de la personne
+    <?php print($tabPersonneidEntOpco1);?>
+    <?php print($tabPersonneType1);?>
+    <?php print($tabPersonneNom1);?>
+    <?php print($tabPersonnePrenom1);?>
+    function SelectEntreprise(){
+        // récupération du contenu du select Interlocuteur
+        var selectInterlocuteur = document.getElementById("listeInterlocuteur");
+        // récupération du contenu du select Entreprise
+        var selectEntreprise = document.getElementById("listeEntreprise");
+        // récupération da la valeur du select = ID_ENT_OPCO
+        var idSelectEntreprise = selectEntreprise.value;
+        // boucle sur le contenu de la table contenant les données de la personne
+        for(i = 0; i < tabPersonneidEntOpco2.length; i++){
+            // si l'id de la table Entreprise est égale à celle de la table personne
+            // et que le type personne est égale à Interlocuteur alors
+            // ajout de la personne dans la liste option du select Interlocuetur
+            if(idSelectEntreprise == tabPersonneidEntOpco2[i] && (tabPersonneType2[i] == "Interlocuteur administratif" || tabPersonneType2[i] == "Interlocuteur OPCO")){
+                var el = document.createElement("option");
+                el.textContent = tabPersonnePrenom2[i]+" "+tabPersonneNom2[i];
+                el.value = tabPersonneidEntOpco2[i];
+                selectInterlocuteur.appendChild(el);
+            }
+        }
+    }
+
+    /*******************************************************\
+        Gestion de l'ajout d'une entreprise dans la liste
+        du choix de l'entreprise
+    \*******************************************************/
+    function BtnAddEntreprise(){
+        // récupération du contenu du select
+        var selectEntreprise = document.getElementById("listeEntreprise");
+        // récupération du contenu
+        var nomEntreprise = document.getElementById("nom_commercial").value;
+        // ajout dans liste
+        var el = document.createElement("option");
+        el.textContent = nomEntreprise;
+        el.value = nomEntreprise;
+        selectEntreprise.appendChild(el);
+    }
+
+    /*******************************************************\
+        Gestion de l'ajout d'un interlocuteur dans la liste
+        du choix des interlocuteurs
+    \*******************************************************/
+    function BtnAddInterlocuteur(){
+        // récupération du contenu du select
+        var selectInterlocuteur = document.getElementById("listeInterlocuteur");
+        // récupération du contenu
+        var nomInterlocuteur = document.getElementById("nom_personne").value;
+        var prenomInterlocuteur = document.getElementById("prenom_personne").value;
+        // ajout dans liste
+        var el = document.createElement("option");
+        el.textContent = nomInterlocuteur+' '+prenomInterlocuteur;
+        el.value = nomInterlocuteur+' '+prenomInterlocuteur;
+        selectInterlocuteur.appendChild(el);
+    }
+
+    /*******************************************************\
+        Gestion de l'ajout d'un responsable formation
+        dans la liste du choix des responsables formations
+    \*******************************************************/
+    function BtnAddRespFormation(){
+        // récupération du contenu du select
+        var selectRespFormation = document.getElementById("listeRespFormation");
+        // récupération du contenu
+        var nomRespFormation = document.getElementById("nomRespFormation").value;
+        var prenomRespFormation = document.getElementById("prenomRespFormation").value;
+        // ajout dans liste
+        var el = document.createElement("option");
+        el.textContent = nomRespFormation+' '+prenomRespFormation;
+        el.value = nomRespFormation+' '+prenomRespFormation;
+        selectRespFormation.appendChild(el);
+    }
+    
     /*******************************************************\
         Gestion de l'ajout d'un site de formation 
         dans la phase Session
@@ -832,7 +1166,7 @@
         Gestion de la recopie des données de la formation
         en fonction de la formation sélectionnée
     \*******************************************************/
-    // déclaration des tableau de contenant les données de la formation
+    // déclaration des tableaux contenant les données de la formation
     <?php print($tabObjForm1);?>
     <?php print($tabObjProForm1);?>
     <?php print($tabParcourPedaPrevi1);?>
