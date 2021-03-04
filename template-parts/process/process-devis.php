@@ -83,8 +83,6 @@
         echo "<script>alert('Le devis ".$numFormation." a bien été éditer !');</script>";
         echo "<>window.location = '" .site_url("/les-devis")."'</>";
     }
-    // date du jour mise dans une variable
-    $dateToday = date("d/m/Y");
 ?>
 
 <div class="main">
@@ -222,18 +220,39 @@
                 <div class="container">
                     <div class="row">
                         <div class="col">
-                            <h6>Lieu de la formation</h6>
-                            <div id="id-boite-check">
-                            <?php foreach ($lesLieuxFormation as $leLieuFormation):?> 
-                                <div class="form-check" id="liste-site-numerica">
-                                    <label class="form-check-label" for="flexCheckDefault">  
-                                        <?php echo  $leLieuFormation->NOM_SITE ;?>
-                                    </label>
-                                    <input class="form-check-input" type="checkbox" value="<?php echo  $leLieuFormation->ID_SITE ;?>">
-                                </div>
-                            <?php endforeach;?>
+                            <div class="input-group mb-3">
+                                <span class="col form-control lieu-formation"><h6>Lieu de la formation</h6></span>
+                                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addSite" data-bs-whatever="@getbootstrap">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi-plus-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                    </svg>
+                                </button>
                             </div>
-                            <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#addSite">Ajouter un site</button>
+                            <div id="id-boite-check" class="boite-check">
+                                <?php foreach ($lesLieuxFormation as $leLieuFormation):?> 
+                                    <div class="form-check" id="liste-site-numerica">
+                                        <label class="form-check-label" for="listeSiteNumerica">  
+                                            <?php echo  $leLieuFormation->NOM_SITE ;?>
+                                        </label>
+                                        <input class="form-check-input" type="checkbox" id="listeSiteNumerica" value="<?php echo  $leLieuFormation->ID_SITE ;?>">
+                                    </div>
+                                <?php endforeach;?>
+                            </div>
+                            <div class="boite-check">
+                                <div class="form-check">
+                                    <label class="form-check-label" for="siteClient">Site client</label>
+                                    <input class="form-check-input" type="checkbox" id="siteClient" value="">
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-check-label" for="siteAutre">Autre site</label>
+                                    <input class="form-check-input" type="checkbox" id="siteAutre" value="">
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-check-label" for="aDistance">À distance</label>
+                                    <input class="form-check-input" type="checkbox" id="aDistance" value="">
+                                </div>
+                            </div>
                         </div>
                         <div class="col">
                             <div>
@@ -871,7 +890,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="BtnAddEntreprise();" name="create-entreprise">Ajouter</button>
+                        <button type="button" class="btn btn-primary" onclick="BtnAddEntreprise()" name="create-entreprise">Ajouter</button>
                     </div>
                 </div>
             </div>

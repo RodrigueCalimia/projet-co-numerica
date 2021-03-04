@@ -512,6 +512,10 @@ a {
   width: auto;
 }
 
+.lieu-formation {
+  background-color: var(--bs-light);
+}
+
 .card-header {
   background-color: var(--gray-400);
   color: var(--bs-light);
