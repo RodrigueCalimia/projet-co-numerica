@@ -12,6 +12,7 @@
     if($lesDevis){
         foreach ($lesDevis as $leDevis){
             $sufixeNumDevis = $leDevis->ID_DEVIS;
+            $sufixeNumDevis += 1;
         }
     } else {
         $sufixeNumDevis = 1;
@@ -50,11 +51,34 @@
     $wpdb -> print_error ();
     // récupération des champs du formulaire
     if ($_POST) {
-        $numFormation   =$_POST['num_formation'];
-        $nomFormation   =$_POST['nom_formation'];
-        $societe        =$_POST['societe'];
-        $datesFormation =$_POST['dates_formation'];
-        $nbStagiaires   =$_POST['nb_stagiaires'];
+        /*******************************************************\
+            Récupération des données de l'onglet CLIENT
+        \*******************************************************/
+        $numFormation   =$_POST['numFormation'];
+        $dateFormation  =$_POST['dateFormation'];
+        $entreprise     =$_POST['listeEntreprise'];
+        $interlocuteur  =$_POST['listeInterlocuteur'];
+        $respFormation  =$_POST['listeRespFormation'];
+        // récupération des valeurs des champs du formulaire d'ajout d'une entreprise
+        $nomCommercial  =$_POST['nom_commercial'];
+        $adresse        =$_POST['adresse-entreprise-opco'];
+        $codePostal     =$_POST['code_postal-entreprise-opco'];
+        $ville          =$_POST['ville-entreprise-opco'];
+        $siret          =$_POST['siret-entreprise-opco'];
+        $naf            =$_POST['naf-entreprise-opco']; 
+        // récupération des valeurs des champs du formulaire d'ajout d'un interlocuteur
+        $typePersonne   =$_POST['type_personne'];
+        $nomPersonne    =$_POST['nom_personne'];
+        $prenomPersonne =$_POST['prenom_personne'];
+        $emailPersonne  =$_POST['email_personne'];
+        $telPersonne    =$_POST['tel_personne'];
+        // récupération des valeurs des champs du formulaire d'ajout d'un responsable formation
+        $typeRespFormation      =$_POST['typeRespFormation'];
+        $nomRespFormation       =$_POST['nomRespFormation'];
+        $prenomRespFormation    =$_POST['prenomRespFormation'];
+        $emailRespFormation     =$_POST['emailRespFormation'];
+        $telRespFormation       =$_POST['telRespFormation'];
+
         // ajout des données dans la table
         $wpdb->insert('wp_devis', 
             array(
@@ -859,9 +883,18 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <div class="col-md-6">
-                            <label for="nom_commercial" class="form-label">Nom commercial</label>
-                            <input type="text" name="nom_commercial" class="form-control" id="nom_commercial" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="typeEntrepriseOPCO" class="form-label">Type</label>
+                                <select class="form-select" aria-label="Default select example" id="typeEntrepriseOPCO" value="">
+                                    <option selected>Entreprise</option>
+                                    <option>OPCO</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nom_commercial" class="form-label">Nom commercial</label>
+                                <input type="text" name="nom_commercial" class="form-control" id="nom_commercial" required>
+                            </div>
                         </div>
                         <div class="col-12">
                             <label for="adresse-entreprise-opco" class="form-label">Adresse</label>
@@ -902,6 +935,15 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
+                                <label for="type_personne" class="form-label">Type</label>
+                                <select class="form-select" aria-label="Default select example" id="type_personne" value="">
+                                    <option selected>Interlocuteur administratif</option>
+                                    <option>Interlocuteur OPCO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <label for="nom_personne" class="form-label">Nom</label>
                                 <input type="text" name="nom_personne" class="form-control" id="nom_personne" required>
                             </div>
@@ -920,22 +962,13 @@
                                 <input type="text" name="tel_personne" class="form-control" id="tel_personne" value="" required>
                             </div>
                         </div>
-                        <div class="row">
-                            <!-- Masqué car pas besoin pour un interlocuteur
+                        <!--
+                        <div class="row">Masqué car pas besoin pour un interlocuteur
                             <div class="col-md-6">
                                 <label for="kabis_personne" class="form-label">Kabis</label>
                                 <input type="text" name="kabis_personne" class="form-control" id="kabis_personne" value="" required>
-                            </div> -->
-                            <div class="col-md-6">
-                                <label for="type_personne" class="form-label">Type</label>
-                                <select class="form-select" aria-label="Default select example" id="type_personne" value="">
-                                    <option selected>Interlocuteur administratif</option>
-                                    <option>Interlocuteur OPCO</option>
-                                </select>
                             </div>
-                        </div>
-                        <!-- Masqué car pas besoin pour un interlocuteur
-                        <div class="row">
+                            Masqué car pas besoin pour un interlocuteur
                             <div class="input-group mb-3 col-md-6">
                                 <label class="input-group-text" for="cv_personne">CV</label>
                                 <input type="file" class="form-control" id="cv_personne">
@@ -956,6 +989,12 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
+                                <label for="typeRespFormation" class="form-label">Type</label>
+                                <input type="text" name="typeRespFormation" class="form-control" id="typeRespFormation" readonly="true" value="Responsable formation">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <label for="nomRespFormation" class="form-label">Nom</label>
                                 <input type="text" name="nomRespFormation" class="form-control" id="nomRespFormation" required>
                             </div>
@@ -974,26 +1013,20 @@
                                 <input type="text" name="telRespFormation" class="form-control" id="telRespFormation" value="" required>
                             </div>
                         </div>
+                        <!--
                         <div class="row">
-                            <!-- Masqué car pas besoin pour un interlocuteur
+                            Masqué car pas besoin pour un interlocuteur
                             <div class="col-md-6">
                                 <label for="kabisRespFormation" class="form-label">Kabis</label>
                                 <input type="text" name="kabisRespFormation" class="form-control" id="kabisRespFormation" value="" required>
-                            </div> -->
-                            <div class="col-md-6">
-                                <label for="typeRespFormation" class="form-label">Type</label>
-                                <select class="form-select" aria-label="Default select example" id="typeRespFormation" value="">
-                                    <option selected>Responsable formation</option>
-                                </select>
                             </div>
-                        </div>
-                        <!-- Masqué car pas besoin pour un interlocuteur
-                        <div class="row">
+                            Masqué car pas besoin pour un interlocuteur
                             <div class="input-group mb-3 col-md-6">
                                 <label class="input-group-text" for="cvRespFormation">CV</label>
                                 <input type="file" class="form-control" id="cvRespFormation">
                             </div>
-                        </div> -->
+                        </div>
+                        -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1143,17 +1176,20 @@
         // Mise à jour de la zone "Dates de la formation"
         var listeDatesFormation = ""; //document.querySelector("#liste-dates-formation").innerHTML;
         // vérification si la durée de la formation en jour est un entier
-        if (Number.isInteger(+dureeFormationJour)) {
+        if (!Number.isInteger(+dureeFormationJour)) {
             // ajout des champs dates de formation
-            for(i = 1; i <= dureeFormationJour; i++){
-                listeDatesFormation = listeDatesFormation + '<label for="labelDatesFormation' + i + '" class="form-label">Jour ' + i + '</label>';
-                listeDatesFormation = listeDatesFormation + '<input type="date" class="form-control" required name="date-formation-jour' + i + '">';
+            for(i = 0; i <= dureeFormationJour; i++){
+                nbJour = dureeFormationJour + 0,5;
+                console.log("dureeFormationJour = " + dureeFormationJour);
+                console.log("nbJour = " + nbJour);
+                listeDatesFormation = listeDatesFormation + '<label for="labelDatesFormation' + nbJour + '" class="form-label">Jour ' + nbJour + '</label>';
+                listeDatesFormation = listeDatesFormation + '<input type="date" class="form-control" required name="date-formation-jour' + nbJour + '">';
                 document.querySelector("#liste-dates-formation").innerHTML = listeDatesFormation;
             }
-            // Supression des champs dates de formation
-            if (dureeFormationJour == 0){
-                document.querySelector("#liste-dates-formation").innerHTML = "";
-            }
+        }
+        // Supression des champs dates de formation
+        if (dureeFormationJour == 0){
+            document.querySelector("#liste-dates-formation").innerHTML = "";
         }
     }
 
