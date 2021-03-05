@@ -17,14 +17,15 @@
 <div class="main">
     <!-- affichage du nom de la page -->    
     <h1><?php the_title()?></h1>
+    
     <section>
-        <div class="header-section">
-            <div class="search">    
+        <div class="header-section justify-content-md-end">
+            <!-- <div class="search">    
                 <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Recherche" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Rechercher</button>
                 </form>
-            </div>
+            </div> -->
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addSite" data-bs-whatever="@getbootstrap">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi-plus-circle" viewBox="0 0 16 16">

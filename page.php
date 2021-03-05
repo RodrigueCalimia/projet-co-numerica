@@ -39,7 +39,7 @@
         get_template_part( 'template-parts/content/content', 'administration');
     }
     if($pageTitle == 'Les Projets'){
-        get_template_part( 'template-parts/listes/liste', 'projets');
+        get_template_part( 'template-parts/process/convertir', 'en-projet');
     }
     if($pageTitle == 'Créer un projet'){
         get_template_part( 'template-parts/process/process', 'projet');

@@ -4,71 +4,120 @@
     issues de la base de données WordPress
 */
 ?>
-<!--
-<style type="text/css">
-    .search {
-        width:100%;
-        
-        margin-left:0px;
-    }
-    .input_search {
-        margin-left:00px;
-        height:30px;
-        width:200px;
-        font-size:22px;
-    }
-    .head {
-        
-        height:40px;
-        font-size:25px;
-        background-color:;
-    }
-    .tableau {
-        margin: auto;
-        display:flex;
-        width: 70%;
-        flex-direction:column;
-        padding:10px;
-        background-color:;
-    }
-    table {
-        border:1px solid black;
-    }
-    td {
-        border:solid;
-        border-width: thin;
-        border-right-width:1px;
-        text-align:center;
-        height:40px;
-    }
-    th {
-        border:0.5px solid black;
-        text-align:center;
-        height:40px;
-    }
-    .couleur {
-        background-color:#D1D2D4;
-    }
-    .couleur2 {
-        background-color:#B0B3B7;
-    }
-</style>
--->
-<?php 
-    global $wpdb; 
-    $resultats = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_client'));
-    $formations = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_formation'));
-    $wpdb -> print_error ();
 
-foreach ($resultats as $page) {
-    $page->ID;
-    $page->client_name;
-}
-foreach ($formations as $format) {
-    $format->ID;
-    $format->client_name;
-}
+<?php 
+    // connexion à la base de donnée
+    global $wpdb;
+    // récupération des données de la table wp_projets contenant les projets
+    $lesProjets = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_projets'));
+
+    // récupération des données de la table wp_devis contenant les devis
+    $lesDevis = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis'));
+
+    // récupération des données de la table wp_formations contenant les formations
+    $lesFormations = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_formations'));
+
+    // récupération des données de la table wp_dates_formation contenant les dates de formation
+    $lesDatesFormation = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_dates_formation'));
+
+    // récupération des données de la table wp_formateurs contenant l'association entre le projet et la personne de type formateur
+    $lesFormateurs = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_formateurs'));
+
+    // récupération des données de la table wp_stagiaires contenant l'association entre le projet et la personne de type stagiaire
+    $lesStagiares = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_stagiaires'));
+    // si erreur de connexion avec la BDD alors affichage d'une erreur
+    $wpdb -> print_error ();
 ?>
+
+<div class="main">
+    <!-- affichage du nom de la page -->    
+    <h1><?php the_title()?></h1>
+    <section>
+        <div class="table">
+            <table class="table table-striped table-hover">
+                <!-- dénomination des titres du tableau -->
+                <thead>
+                    <tr>
+                        <th>N° projet</th>
+                        <th>Client</th>
+                        <th>Formation</th>
+                        <th>Dates de formation</th>
+                        <th>Nb Stagiaires</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <!-- alimentation des lignes du tableau -->   
+    foreach ($lesProjets as $leProjet) {
+    }
+                <tbody>
+                    <?php foreach ($lesProjets as $leProjet):
+                        // stockage des données de la table projets
+                        $idProjet       = $leProjet->ID_PROJET;
+                        $idDevisProjet  = $leProjet->ID_DEVIS;
+                        $factureProjet  = $leProjet->FACTURE_PROJET;
+                        $statutProjet   = $leProjet->STATUT_PROJET;
+                        $idFormateur    = $leProjet->ID_FORMATEUR;
+                        $idStagiaire    = $leProjet->ID_STAGIAIRE;
+                        $numFormProjet  = $leProjet->NUM_FORM;
+                        // stockage des données de la table devis
+                        foreach ($lesDevis as $leDevis) {
+                            $idDevis        = $leDevis->ID_DEVIS;
+                            $numFormDevis   = $leDevis->NUM_FORM;
+                            $societe        = $leDevis->SOCIETE;
+                            $nbStagiaire    = $leDevis->NB_STAGIAIRES;
+                            $statutDevis    = $leDevis->STATUT_DEVIS;
+                            $idDateFormDevis= $leDevis->ID_DATES_FORMATION;
+                        }
+                        // stockage des données de la table formations
+                        foreach ($lesFormations as $laFormation) {
+                            $idFormation        = $laFormation->ID_FORMATION;
+                            $nomFormation       = $laFormation->NOM_FORMATION;
+                            $objFormation       = $laFormation->OBJ_FORMATION;
+                            $objProFormation    = $laFormation->OBJ_PRO_FORMATION;
+                            $parcourPedaPrevi   = $laFormation->PARCOUR_PEDA_PREVI;
+                        }
+                        // stockage des données de la table dates formations
+                        foreach ($lesDatesFormation as $laDateFormation) {
+                            $idDateForm         = $laDateFormation->ID_DATES_FORMATION;
+                            $idDevisDatesForm   = $laDateFormation->ID_DEVIS;
+                        }
+                        // stockage des données de la table formateurs
+                        foreach ($lesFormateurs as $leFormateur) {
+                            $idPersonneForm = $leFormateur->ID_PERSONNE;
+                            $idProjetForm   = $leFormateur->ID_Projet;
+                        }
+                        // stockage des données de la table personnes
+                        foreach ($lesStagiares as $leStagiare) {
+                            $idPersonneStag = $leStagiare->ID_PERSONNE;
+                            $idProjetStag   = $leStagiare->ID_Projet;
+                        }
+                        ?>    
+                        <tr>
+                            <td><?php echo  $leProjet->NUM_PROJET ;?></td>
+                            <td><?php echo  $leProjet->LIB_FORM ;?></td>
+                            <td><?php echo  $leProjet->SOCIETE;?></td>
+                            <td><?php echo  $leProjet->STATUT_PROJET;?></td>
+                            <td><?php echo  $leProjet->DATES_FORM;?></td>
+                            <td><?php echo  $leProjet->NB_STAGIAIRES;?></td>
+                            <td>
+                                <span title="Visualiser le projet" >
+                                    <a href="#" >
+                                        <i class="bi bi-eye" ></i>
+                                    </a>
+                                </span>
+                                <span title="Modifier le projet">
+                                    <a href="#">
+                                        <i class="bi bi-pencil-square" ></i>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach;?>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
 <div class="search">
     <h1>Tableau de bord</h1>
     <div class="tableau">
