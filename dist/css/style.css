@@ -488,6 +488,7 @@ a {
   -webkit-box-pack: end;
       -ms-flex-pack: end;
           justify-content: flex-end;
+  margin-top: 20px;
 }
 
 .btn-margin {
@@ -503,6 +504,18 @@ a {
   width: 100px;
 }
 
+.input-group-text-session {
+  width: 90px;
+}
+
+.chiffrage-total {
+  width: auto;
+}
+
+.lieu-formation {
+  background-color: var(--bs-light);
+}
+
 .card-header {
   background-color: var(--gray-400);
   color: var(--bs-light);
@@ -513,10 +526,6 @@ a {
   color: var(--bs-light);
 }
 
-/*thead,
-.table-td-action{
-    text-align: center;
-}*/
 .header {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -621,5 +630,10 @@ a {
 
 .st1 {
   fill: var(--bs-light);
+}
+
+.tab-content {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 /*# sourceMappingURL=style.css.map */

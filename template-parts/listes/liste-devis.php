@@ -8,7 +8,7 @@
 <?php   
     // connexion à la base de donnée
     global $wpdb;
-    // récupération des données de la table wp_listeformation contenant les formations
+    // récupération des données de la table wp_devis contenant les devis
     $lesDevis = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis'));
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();
@@ -18,13 +18,13 @@
     <!-- affichage du nom de la page -->    
     <h1><?php the_title()?></h1>
     <section>
-        <div class="header-section">
-            <div class="search">    
+        <div class="header-section justify-content-md-end">
+            <!-- <div class="search">    
                 <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Recherche" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Rechercher</button>
                 </form>
-            </div>
+            </div> -->
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button class="btn btn-primary" type="button" onclick="addDevis()">Créer</button>
             </div>
