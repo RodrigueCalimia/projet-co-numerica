@@ -6,6 +6,12 @@
     $lesLieuxFormation = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_sites'));
     // récupération des données de la table wp_listeformation contenant les formations
     $formations = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_listeformation'));
+    // récupération des données de la table wp_projets contenant les devis
+    $lesDevis = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis'));
+    // récupération des données de la table wp_projets contenant les devis
+    $lesProjets = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_projets'));
+    // récupération des données de la table wp_projets contenant les devis
+    $lesPersonnes = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_personnes'));
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();
     // récupération des champs du formulaire
@@ -25,6 +31,24 @@
                 'NB_STAGIAIRES' =>$nbStagiaires
             )
         );
+        // création du nouveau projet dans la BDD
+        $numProjet          =$_POST['num_projet'];
+        $libForm            =$_POST['lib_form'];
+        $societe            =$_POST['societe'];
+        $statutProjet       =$_POST['statut_projet'];
+        $datesForm          =$_POST['dates_form'];
+        $nbStagiaires       =$_POST['nb_stagiaires'];
+        // ajout des données dans la table
+        $wpdb->insert('wp_projets', 
+            array(
+                'NUM_PROJET'        =>$numProjet,
+                'LIB_FORM'          =>$libForm,
+                'SOCIETE'           =>$societe,
+                'STATUT_PROJET'     =>$statutProjet,
+                'DATES_FORM'        =>$datesForm,
+                'NB_STAGIAIRES'     =>$nbStagiaires
+            )
+        );
         echo "<>window.location = '".site_url("/les-projets")."'</>";
     }
 ?>
@@ -34,7 +58,6 @@
     <!-- nav tabs -->
     <nav>
         <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-projet-tab" data-bs-toggle="tab" data-bs-target="#nav-projet" type="button" role="tab" aria-controls="nav-projet" aria-selected="true">Projet</button>
             <button class="nav-link" id="nav-formateur-tab" data-bs-toggle="tab" data-bs-target="#nav-formateur" type="button" role="tab" aria-controls="nav-formateur" aria-selected="false">Formateur</button>
             <button class="nav-link" id="nav-stagiaires-tab" data-bs-toggle="tab" data-bs-target="#nav-stagiaires" type="button" role="tab" aria-controls="nav-stagiaires" aria-selected="false">Stagiaires</button>
             <button class="nav-link" id="nav-documents-tab" data-bs-toggle="tab" data-bs-target="#nav-documents" type="button" role="tab" aria-controls="nav-documents" aria-selected="false">Documents</button>
@@ -45,105 +68,126 @@
 
     <form class="row" method="POST">
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-projet" role="tabpanel" aria-labelledby="nav-projet-tab">
-                <div class="col-md-6">
-                    <!-- Zone du choix du lieu de formation -->
-                    <label for="listeFormation" class="form-label">Libellé de la formation</label>
-                    <!-- récupération des lieux de formation -->
-                    <select class="form-select" aria-label="Default select example" onchange="change_valeur();" id="listeFormation">
+            <!-- Contenu de l'onglet Formateur -->
+            <div class="tab-pane fade show active" id="nav-formateur" role="tabpanel" aria-labelledby="nav-formateur-tab">
+                <div class="table">
+                    <table class="table table-striped table-hover">
+                        <!-- dénomination des titres du tableau -->
+                        <thead>
+                            <tr>
+                                <th>N° Projet</th>
+                                <th>Libellé</th>
+                                <th>Société</th>
+                                <th>Statut</th>
+                                <th>Dates de formation</th>
+                                <th>Nb stagiaires</th>
+                            </tr>
+                        </thead>
+                        <!-- alimentation des lignes du tableau -->   
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Ajouter un formateur-->
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Formateur</span>
+                    <select class="form-select" aria-label="Default select example" id="formateur" name="nomFormateur">
                         <option selected></option>
-                        <?php foreach ($formations as $formation):?> 
-                            <option value="<?php echo $formation->ID_FORMATION;?>"><?php echo  $formation->NOM_FORMATION ;?></option>
-                        <?php endforeach;?>
+                        <?php 
+                            $selectForm = "";
+                            $tabNomFormateur1 = "var tabNomFormateur2 = Array()\n";
+                            $tabPrenomFormateur1 = "var tabPrenomFormateur2 = Array()\n";
+                            $tabEmailFormateur1 = "var tabEmailFormateur2 = Array()\n";  
+                            $tabTelFormateur1 = "var tabTelFormateur2 = Array()\n";                  
+                            foreach ($lesPersonnes as $laPersonne):
+                                $typePersonne = $laPersonne->TYPE_PERSONNE;
+                                if($typePersonne=="formateur"){
+                                    $selectForm = $selectForm . "<option value=".$laPersonne->ID_PERSONNE.">".$laPersonne->NOM_PERSONNE." ".$laPersonne->PRENOM_PERSONNE."</option>";
+                                    $tabNomFormateur1 = $tabNomFormateur1."tabNomFormateur2[".$laPersonne->ID_PERSONNE."]='".$laPersonne->NOM_PERSONNE."'\n";
+                                    $tabPrenomFormateur1 = $tabPrenomFormateur1."tabPrenomFormateur2[".$laPersonne->ID_PERSONNE."]='".$laPersonne->PRENOM_PERSONNE."'\n";
+                                    $tabEmailFormateur1 = $tabEmailFormateur1."tabEmailFormateur2[".$laPersonne->ID_PERSONNE."]='".$laPersonne->EMAIL_PERSONNE."'\n";
+                                    $tabTelFormateur1 = $tabTelFormateur1."tabTelFormateur2[".$laPersonne->ID_PERSONNE."]='".$laPersonne->TEL_PERSONNE."'\n";
+                                    $tabNomFormateur2[$laPersonne->ID_PERSONNE]=$laPersonne->NOM_PERSONNE;
+                                    $tabPrenomFormateur2[$laPersonne->ID_PERSONNE]=$laPersonne->PRENOM_PERSONNE;
+                                    $tabEmailFormateur2[$laPersonne->ID_PERSONNE]=$laPersonne->EMAIL_PERSONNE;
+                                    $tabTelFormateur2[$laPersonne->ID_PERSONNE]=$laPersonne->TEL_PERSONNE;
+                                }
+                            endforeach;
+                            print $selectForm
+                        ?>
                     </select>
+                    <span class="input-group-text"><button class="btn btn-primary" type="button" onclick="addFormateur()" name="ajout-formateur">Ajouter le Formateur</button></span>
+                </div>
+                <!-- FIN de Ajouter un formateur-->
+                <div class="table" id="tabFormateur">
+                    <table class="table table-striped table-hover">
+                        <!-- dénomination des titres du tableau -->
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                            </tr>
+                        </thead>
+                        <!-- alimentation des lignes du tableau -->   
+                        <tbody>
+                            <tr id="lineFormateurs">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="tab-pane fade" id="nav-pedagogie" role="tabpanel" aria-labelledby="nav-pedagogie-tab">
-                <div class="col-md-6">
-                    <label for="obj_formation" class="form-label">Objectifs de la formation</label>
-                    <input type="text" name="obj_formation" class="form-control" id="obj_formation" readonly="true" >
-                </div>
-                <div class="col-md-6">
-                    <label for="validationServer03" class="form-label">Objectifs professionnels de la formation</label>
-                    <input type="text" name="obj_pro_formation" class="form-control" id="obj_pro_formation" value="" readonly="true" >
-                </div>
-                <div class="col-md-6">
-                    <label for="validationServer04" class="form-label">Parcours pédagogique prévisionnel</label>
-                    <input type="text" name="parc_peda_previ" class="form-control" id="parc_peda_previ" value="" readonly="true" >
-                </div>
+            <!-- Contenu de l'onglet Stagiaires -->            
+            <div class="tab-pane fade" id="nav-stagiaires" role="tabpanel" aria-labelledby="nav-stagiaires-tab">
+            <!-- Ajouter un stagiaire-->
+            <div class="input-group mb-3">
+                <span class="input-group-text">Stagiaires</span>
+                    <select class="form-select" aria-label="Default select example" id="stagiaire" name="nomStagiaire">
+                        <option selected></option>
+                            <?php foreach ($lesPersonnes as $laPersonne):
+                                 $typePersonne = $laPersonne->TYPE_PERSONNE;
+                                    if($typePersonne=="stagiaire"){
+                            ?> 
+                        <option value="<?php echo  $laPersonne->ID_PERSONNE ;?>"><?php echo  $laPersonne->NOM_PERSONNE ;?> <?php echo  $laPersonne->PRENOM_PERSONNE ;?></option>
+                            <?php  }  endforeach;?>
+                    </select>
+                <span class="input-group-text"><button class="btn btn-primary" type="button" onclick="addStagiaire()" name="ajout-stagiaire">Ajouter le Stagiaire</button></span>
             </div>
-            <div class="tab-pane fade" id="nav-session" role="tabpanel" aria-labelledby="nav-session-tab">            
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <h6>Lieu de la formation</h6>
-                            <?php foreach ($lesLieuxFormation as $leLieuFormation):?> 
-                                <div class="form-check">
-                                    <label class="form-check-label" for="flexCheckDefault">  
-                                        <?php echo  $leLieuFormation->NOM_SITE ;?>
-                                    </label>
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                </div> 
-                            <?php endforeach;?>
-                            <button class="btn btn-secondary" type="button" onclick="addSite()">Ajouter un site</button>
-                        </div>
-                        <div class="col">
-                            <h6>Horaires de la formation</h6>
-                            <label class="form-time-label" for="flexTimeDefault">Matin du</label>
-                            <input class="form-time-input" type="time" value="09:00" id="flexTimeDefault01">
-                            <label class="form-time-label" for="flexTimeDefault">à</label>
-                            <input class="form-time-input" type="time" value="12:30" id="flexTimeDefault02">
-                            <label class="form-time-label" for="flexTimeDefault">Après-midi du</label>
-                            <input class="form-time-input" type="time" value="13:30" id="flexTimeDefault03">
-                            <label class="form-time-label" for="flexTimeDefault">à</label>
-                            <input class="form-time-input" type="time" value="17:00" id="flexTimeDefault04">
-                        </div>
-                        <div class="col">
-                            <h6>Prérequis</h6>
-                            <textarea class="form-control" value="" id="prerequis" rows="3"></textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <h6>Durée de la formation</h6>
-                            <input type="number" name="durre_formation" class="form-control" id="durre_formation" required onchange="" value=0>
-                            jours soit xxx heures
-                        </div>
-                        <div class="col">
-                            <h6>Dates de la formation</h6>
-                            <div class="liste">
-                                <div class="model">
-                                    <div class="dates_formation">
-                                        <label for="validationServer02" class="form-label">Jour 1</label>    
-                                        <input type="date" class="form-control" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-check">
-                                <label class="form-check-label" for="flexCheckDefault">Dates non définies</label>
-                                <input class="form-check-input" type="checkbox" value="" >
-                            </div>
-                        </div>
-                        <div class="col">
-                            <h6>Nombre de participants</h6>
-                            <input type="number" name="nb_participants" class="form-control" id="nb_participants" required>
-                        </div>
-                    </div>
-                    <nav>
-                        <div class="nav justify-content-center" id="nav-tab" role="tablist">
-                            <button class="nav-link" id="nav-pedagogie-tab" data-bs-toggle="tab" data-bs-target="#nav-pedagogie" type="button" role="tab" aria-controls="nav-predagogie" aria-selected="false">Précédant</button>
-                            <button class="nav-link" id="nav-chiffrage-tab" data-bs-toggle="tab" data-bs-target="#nav-chiffrage" type="button" role="tab" aria-controls="nav-chiffrage" aria-selected="false">Suivant</button>
-                        </div>
-                    </nav>
-                    <button class="btn btn-primary" type="button" onclick="navPedagodie()">Précédant</button>
-                    <button class="btn btn-primary" type="button" onclick="navChiffrage()">Suivant</button>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="nav-chiffrage" role="tabpanel" aria-labelledby="nav-chiffrage-tab">
-                Chiffrage
-                
-                <div class="col-md-6">
-                    <input class="btn btn-primary" type="submit" value="Éditer le devis"></input>
+                <!-- FIN de Ajouter un stagiaire-->
+                <div class="table" id="tabStagiaires">
+                    <table class="table table-striped table-hover">
+                        <!-- dénomination des titres du tableau -->
+                        <thead>
+                            <tr id="lineStagiaires">
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                            </tr>
+                        </thead>
+                        <!-- alimentation des lignes du tableau -->   
+                        <tbody>  
+                            <tr id="lineStagiaires">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -151,24 +195,26 @@
 </div>
 
 <script>
-    function change_valeur() {
-        select = document.getElementById("listeFormation");
-        choice = select.selectedIndex;
-        valeur = select.options[choice].value;
-        document.getElementById('validationServer02').value = valeur;
+    <?php print($tabNomFormateur1);?>
+    <?php print($tabPrenomFormateur1);?>
+    <?php print($tabEmailFormateur1);?>
+    <?php print($tabTelFormateur1);?>
+
+    function addFormateur() {
+     //   var tabFormateur = document.querySelector("#lineFormateurs").innerHTML;
+     //   monSelect = document.getElementById("formateur").value;
+       console.log('ajoutFormateur');
+     //   tabFormateur = tabFormateur + '<td>'+tabNomFormateur2[valueSelect]'</td>' 
+       //     <td></td>
+       //     <td></td>
+        //    <td></td>
+         //   <td></td>
     }
-    function addSite() {
-        window.location = '../ajouter-un-site';
-    }
-    function navPedagodie() {
-        let elmPeda = document.getElementById('nav-pedagogie-tab');
-        elmPeda.className = 'nav-link active';
-        elmPeda.setAttribute("aria-selected", true);
-        let elmSession = document.getElementById('nav-session-tab');
-        elmSession.className = 'nav-link';
-        elmSession.setAttribute("aria-selected", false);
-    }
-    function navChiffrage() {
-        window.location = '../ajouter-un-site';
+
+    function addStagiaire() {
+        var tabStagiaires = document.querySelector("#lineStagiaires").innerHTML;
+        console.log(tabStagiaires);
+        var nomStagiaire = document.getElementById("stagiaire").value;
+        console.log(nomStagiaire);
     }
 </script>

@@ -2,13 +2,13 @@
 /* 
     Page contenant la liste de toutes les formations
     issues de la base de données WordPress et se trouvant
-    dans la table wp_listeformation
+    dans la table wp_projets
 */
 ?>
 <?php   
     // connexion à la base de donnée
     global $wpdb;
-    // récupération des données de la table wp_listeformation contenant les formations
+    // récupération des données de la table wp_projets contenant les projets
     $lesProjets = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_projets'));
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();
@@ -18,13 +18,13 @@
     <!-- affichage du nom de la page -->    
     <h1><?php the_title()?></h1>
     <section>
-        <div class="header-section">
-            <div class="search">    
+        <div class="header-section justify-content-md-end">
+            <!-- <div class="search">    
                 <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Recherche" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Rechercher</button>
                 </form>
-            </div>
+            </div> -->
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button class="btn btn-primary" type="button" onclick="addProjet()">Créer</button>
             </div>
@@ -53,15 +53,15 @@
                             <td><?php echo  $leProjet->STATUT_PROJET;?></td>
                             <td><?php echo  $leProjet->DATES_FORM;?></td>
                             <td><?php echo  $leProjet->NB_STAGIAIRES;?></td>
-                            <td>
+                            <td class="table-td-action">
+                                <span title="Visualiser le projet">
+                                    <a href="#">
+                                        <i class="bi bi-eye" ></i>
+                                    </a>
+                                </span>
                                 <span title="Modifier le projet" >
                                     <a href="#" >
                                         <i class="bi bi-pencil-square" ></i>
-                                    </a>
-                                </span>
-                                <span title="Supprimer le projet">
-                                    <a href="#">
-                                        <i class="bi bi-trash-fill" ></i>
                                     </a>
                                 </span>
                             </td>

@@ -50,17 +50,18 @@
                             <td><?php echo  $leDevis->NUM_FORM ;?></td>
                             <td><?php echo  $leDevis->NOM_FORM ;?></td>
                             <td><?php echo  $leDevis->SOCIETE;?></td>
+                            <td><?php echo  $leDevis->STATUT_DEVIS;?></td>
                             <td><?php echo  $leDevis->DATES_FORM;?></td>
                             <td><?php echo  $leDevis->NB_STAGIAIRES;?></td>
                             <td class="table-td-action">
+                                <span title="Visualiser le devis">
+                                    <a href="#">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </span>
                                 <span title="Modifier le devis" >
                                     <a href="#" >
                                         <i class="bi bi-pencil-square" ></i>
-                                    </a>
-                                </span>
-                                <span title="Supprimer le devis">
-                                    <a href="#">
-                                        <i class="bi bi-trash-fill" ></i>
                                     </a>
                                 </span>
                             </td>
