@@ -1,14 +1,14 @@
 <?php 
 /* 
-    Page contenant la liste de toutes les formations
+    Page contenant la liste de tous les sites Numerica
     issues de la base de données WordPress et se trouvant
-    dans la table wp_listeformation
+    dans la table wp_sites
 */
 ?>
 <?php   
     // connexion à la base de donnée
     global $wpdb;
-    // récupération des données de la table wp_listeformation contenant les formations
+    // récupération des données de la table wp_sites contenant les sites
     $lesSites = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_sites'));
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();
