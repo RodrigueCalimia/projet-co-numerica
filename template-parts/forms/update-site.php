@@ -24,7 +24,7 @@
 <div class="main">   
     <h1>Modification</h1> 
     <div class="container form-dim-width">
-        <form class="row justify-content-between" method="POST">
+        <form class="row justify-content-between" method="POST" enctype="multipart/form-data">
             <div class="col-md-6">
                 <label for="nom_site" class="form-label">Libellé du site</label>
                 <input type="text" name="nom_site" class="form-control" id="nom_site" value="<?php echo $_GET['nomSite'];?>" required>

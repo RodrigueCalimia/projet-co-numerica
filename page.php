@@ -17,7 +17,7 @@
     if($pageTitle == 'Ajouter une entreprise'){
         get_template_part( 'template-parts/forms/create', 'entreprise-opco');
     }
-    if($pageTitle == 'Les Utilisateurs'){
+    if($pageTitle == 'Utilisateurs'){
         get_template_part( 'template-parts/listes/liste', 'personnes');
     }
     if($pageTitle == 'Ajouter une personne'){
@@ -44,12 +44,9 @@
     if($pageTitle == 'Créer un projet'){
         get_template_part( 'template-parts/process/process', 'projet');
     }
-    if($pageTitle == 'Fiche site'){
-        get_template_part( 'template-parts/single/fiche', 'site');
-    }
     if($pageTitle == 'Coûts de fonctionnement'){
         get_template_part( 'template-parts/forms/update', 'couts-fonctionnement');
     }
 ?>
 
-<?php get_footer(); ?>
+<?php //get_footer(); ?>

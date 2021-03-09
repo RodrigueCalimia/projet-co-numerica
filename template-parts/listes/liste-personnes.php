@@ -9,7 +9,17 @@
     // connexion à la base de donnée
     global $wpdb;
     // récupération des données de la table wp_pesonnes contenant les personnes
-    $personnes = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_personnes'));
+    $lesPersonnes = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_personnes'));
+    // récupération des données de la table wp_roles contenant les rôles des personnes
+    $lesRoles = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_roles'));
+    $nbRole = count($lesRoles);
+    $tblRoles = array();
+    $i = 1;
+    // récupération des rôles
+    foreach ($lesRoles as $leRole){
+        $tblRoles[$i]   = $leRole->ROLE ;
+        $i +=1 ;
+    }
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();
 ?>
@@ -46,28 +56,70 @@
                         <th>Kabis</th>
                         <th>CV</th>
                         <th>Type</th>
+                        <th>Rôle</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <!-- alimentation des lignes du tableau -->   
                 <tbody>
-                    <?php foreach ($personnes as $personne):?>    
+                    <?php foreach ($lesPersonnes as $laPersonne):
+                        // récupération et stockage des données
+                        $nom            = $laPersonne->NOM_PERSONNE ;
+                        $prenom         = $laPersonne->PRENOM_PERSONNE ;
+                        $email          = $laPersonne->EMAIL_PERSONNE ;
+                        $telephone      = $laPersonne->TEL_PERSONNE ;
+                        $kabis          = $laPersonne->KABIS_PERSONNE ;
+                        $cv             = $laPersonne->CV_PERSONNE ;
+                        $type           = $laPersonne->TYPE_PERSONNE ;
+                        $roleAdminWp    = $laPersonne->ROLE_ADMIN_WP ;
+                        $roleAdminSol   = $laPersonne->ROLE_ADMIN_SOLUTION ;
+                        $roleGestion    = $laPersonne->ROLE_GESTIONNAIRE ;
+                        $roleAssist     = $laPersonne->ROLE_ASSISTANTE ;
+                        $roleFinance    = $laPersonne->ROLE_FINANCE ;
+                        $roleFormateur  = $laPersonne->ROLE_FORMATEUR;
+                        $roleClient     = $laPersonne->ROLE_CLIENT ;
+                        $roleSub        = $laPersonne->ROLE_SUBROGATEUR ;
+                        ?>    
                         <tr>
-                            <td><?php echo  $personne->NOM_PERSONNE ;?></td>
-                            <td><?php echo  $personne->PRENOM_PERSONNE ;?></td>
-                            <td><?php echo  $personne->EMAIL_PERSONNE ;?></td>
-                            <td><?php echo  $personne->TEL_PERSONNE ;?></td>
-                            <td><?php echo  $personne->KABIS_PERSONNE ;?></td>
-                            <td><?php echo  $personne->CV_PERSONNE ;?></td>
+                            <td><?php echo  $nom ;?></td>
+                            <td><?php echo  $prenom ;?></td>
+                            <td><?php echo  $email ;?></td>
+                            <td><?php echo  $telephone ;?></td>
+                            <td><?php echo  $kabis ;?></td>
+                            <td><?php echo  $cv ;?></td>
+                            <td><?php echo  $type ;?></td>
+                            <td>
+                                <?php 
+                                    if ($roleAdminWp == 1){
+                                        echo "<div class='row'>".$tblRoles[1]."</div>";
+                                    }
+                                    if ($roleAdminSol == 1){
+                                        echo "<div class='row'>".$tblRoles[2]."</div>";
+                                    }
+                                    if ($roleGestion == 1){
+                                        echo "<div class='row'>".$tblRoles[3]."</div>";
+                                    }
+                                    if ($roleAssist == 1){
+                                        echo "<div class='row'>".$tblRoles[4]."</div>";
+                                    }
+                                    if ($roleFinance == 1){
+                                        echo "<div class='row'>".$tblRoles[5]."</div>";
+                                    }
+                                    if ($roleFormateur == 1){
+                                        echo "<div class='row'>".$tblRoles[6]."</div>";
+                                    }
+                                    if ($roleClient == 1){
+                                        echo "<div class='row'>".$tblRoles[7]."</div>";
+                                    }
+                                    if ($roleSub == 1){
+                                        echo "<div class='row'>".$tblRoles[8]."</div>";
+                                    }
+                                ?>
+                            </td>
                             <td class="table-td-action">
                                 <span title="Modifier la personne" >
                                     <a href="#" >
                                         <i class="bi bi-pencil-square" ></i>
-                                    </a>
-                                </span>
-                                <span title="Supprimer la personne">
-                                    <a href="#">
-                                        <i class="bi bi-trash-fill" ></i>
                                     </a>
                                 </span>
                             </td>

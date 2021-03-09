@@ -20,6 +20,6 @@
     }
 ?>
 
-<form class="row" method="POST">
+<form class="row" method="POST" enctype="multipart/form-data">
     <?php get_template_part( 'template-parts/forms/form', 'site');?>
 </form>
