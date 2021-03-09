@@ -38,14 +38,23 @@
     }
     // récupération des données de la table wp_formations contenant les formations
     $lesFormations = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_formations'));
-    // récupération des données de la table wp_cout_fonctionnement contenant les coûts de fonctionnement
-    $lesCoutsFonctionnement = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_cout_fonctionnement'));
-    // stockage des doonées dans les variables
-    foreach ($lesCoutsFonctionnement as $leCoutFonctionnement){
-        $idCoutFonctionnement       = $leCoutFonctionnement->ID_COUT_FONCT;
-        $coutAdminFormation         = $leCoutFonctionnement->COUT_ADMIN_FORMATION;
-        $coutCompta                 = $leCoutFonctionnement->COUT_COMPTA;
-        $coutServiceInformatique    = $leCoutFonctionnement->COUT_SERVICE_INFORMATIQUE;
+    // récupération des données de la table wp_cout_admin_formation contenant le coût administratif formation
+    $lesCoutAdminFormation = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_cout_admin_formation'));
+    // récupération des données de la dernière ligne du tableau
+    foreach ($lesCoutAdminFormation as $leCoutAdminFormation){
+        $coutAdminFormation = $leCoutAdminFormation->COUT_ADMIN_FORMATION;
+    }
+    // récupération des données de la table wp_cout_comptabilite contenant le coût comptabilité
+    $lesCoutCompta = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_cout_comptabilite'));
+    // récupération des données de la dernière ligne du tableau
+    foreach ($lesCoutCompta as $leCoutCompta){
+        $coutCompta = $leCoutCompta->COUT_COMPTA;
+    }
+    // récupération des données de la table wp_cout_service_informatique contenant le coût service informatique
+    $lesCoutServiceInformatique = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_cout_service_informatique'));
+    // récupération des données de la dernière ligne du tableau
+    foreach ($lesCoutServiceInformatique as $leCoutServiceInformatique){
+        $coutServiceInformatique    = $leCoutServiceInformatique->COUT_SERVICE_INFORMATIQUE;
     }
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();

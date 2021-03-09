@@ -8,7 +8,7 @@
 <?php   
     // connexion à la base de donnée
     global $wpdb;
-    // récupération des données de la table wp_pesonnes contenant les sites
+    // récupération des données de la table wp_pesonnes contenant les personnes
     $personnes = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_personnes'));
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();

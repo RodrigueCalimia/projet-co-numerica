@@ -38,7 +38,6 @@
     <label class="input-group-text" for="cv_personne">CV</label>
     <input type="file" class="form-control" id="cv_personne">
 </div>
-
-<div class="col-md-6">
-    <input class="btn btn-primary" type="submit" value="ajouter"></input>
+<div id="conteneur-btn">
+    <button type="submit" class="btn btn-primary btn-right">Ajouter</button>
 </div>

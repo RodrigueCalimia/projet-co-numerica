@@ -35,3 +35,6 @@
         <input type="text" name="naf-entreprise-opco" class="form-control" id="naf-entreprise-opco" required>
     </div>
 </div>
+<div id="conteneur-btn">
+    <button type="submit" class="btn btn-primary btn-right">Ajouter</button>
+</div>

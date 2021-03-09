@@ -517,8 +517,11 @@ a {
 }
 
 .card-header {
-  background-color: var(--gray-400);
-  color: var(--bs-light);
+  background-color: var(--gray-200);
+}
+
+.card-margin {
+  margin: 20px;
 }
 
 .modal-header {
@@ -632,8 +635,123 @@ a {
   fill: var(--bs-light);
 }
 
-.tab-content {
-  margin-top: 20px;
-  margin-bottom: 20px;
+.header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.header.up {
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background: var(--bs-blue);
+}
+
+.header.down {
+  background: var(--bs-dark);
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.up__element {
+  padding-left: 20px;
+  padding-right: 20px;
+  color: var(--bs-light);
+}
+
+/***********************************\
+* Stylisation des différents menus  *
+\***********************************/
+.menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: clamp(0.6875rem, calc( 0.6875rem + 2 * ( ( 100vw - 640px ) / 656 )), 0.8125rem);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.0625rem;
+}
+
+.active .menu__link {
+  color: var(--bs-orange);
+}
+
+.active .menu__link:hover {
+  color: var(--bs-light);
+}
+
+.menu__link {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 5px 20px;
+  color: var(--bs-light);
+  text-decoration: none;
+}
+
+.menu__link:hover {
+  color: var(--bs-orange);
+}
+
+.menu__list {
+  margin-top: 25vh;
+  margin-left: 1vw;
+}
+
+@media (min-width: 960px) {
+  .menu__list {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: 0;
+  }
+}
+
+.up__element a {
+  color: var(--bs-light);
+}
+
+.dropdown-menu a {
+  color: var(--bs-orange);
+  margin-left: 0.5vw;
+}
+
+.menu_user__link {
+  color: var(--bs-orange);
+  text-decoration: none;
+}
+
+.menu_user__link:hover {
+  color: var(--nm-orange-dark);
+}
+
+.st0 {
+  fill-rule: evenodd;
+  clip-rule: evenodd;
+  fill: var(--bs-light);
+}
+
+.st1 {
+  fill: var(--bs-light);
+}
+
+footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background: var(--bs-blue);
+}
+
+footer p {
+  color: var(--bs-light);
 }
 /*# sourceMappingURL=style.css.map */

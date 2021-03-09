@@ -47,6 +47,9 @@
     if($pageTitle == 'Fiche site'){
         get_template_part( 'template-parts/single/fiche', 'site');
     }
+    if($pageTitle == 'Coûts de fonctionnement'){
+        get_template_part( 'template-parts/forms/update', 'couts-fonctionnement');
+    }
 ?>
 
 <?php get_footer(); ?>
