@@ -23,7 +23,7 @@
 <div class="main">   
     <h1>Modification</h1> 
     <div class="container form-dim-width">
-        <form class="row justify-content-between" method="POST">
+        <form class="row justify-content-between" method="POST" enctype="multipart/form-data">
             <div class="col-md-6">
                 <label for="nom_formation" class="form-label">Libellé de la formation</label>
                 <input type="text" name="nom_formation" class="form-control" id="nom_formation" value="<?php echo $_GET['nomFormation'];?>" required>

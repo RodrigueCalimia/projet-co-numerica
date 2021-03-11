@@ -38,7 +38,7 @@
 <div class="main">   
     <h1>Modification d'une <?php echo $typeEntOpcoPage; ?></h1> 
     <div class="container form-dim-width">
-        <form class="row justify-content-between" method="POST">
+        <form class="row justify-content-between" method="POST" enctype="multipart/form-data">
             <div class="col-md-6">
                 <label for="nom_commercial" class="form-label">Nom commercial</label>
                 <input type="text" name="nom_commercial" class="form-control" id="nom_commercial" value="<?php echo $_GET['nomEntOpco'];?>" required>

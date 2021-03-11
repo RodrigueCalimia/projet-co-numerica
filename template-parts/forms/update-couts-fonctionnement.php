@@ -28,7 +28,7 @@
 <div class="main">   
     <h1><?php the_title()?></h1>
     <div class="container form-dim-width">
-        <form class="row justify-content-between" method="POST">
+        <form class="row justify-content-between" method="POST" enctype="multipart/form-data">
             <?php get_template_part( 'template-parts/forms/form', 'couts-fonctionnement');?>
         </form>
     </div>
