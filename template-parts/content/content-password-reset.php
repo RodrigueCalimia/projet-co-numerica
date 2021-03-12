@@ -4,69 +4,17 @@
         <meta charset="<?php bloginfo( 'charset' ); ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="<?php bloginfo('stylesheet_url'); ?>" type="text/css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <?php //wp_head(); ?>
-        <style type="text/css">
-            .st0{
-                fill-rule:evenodd;
-                clip-rule:evenodd;
-                fill: #FFFFFF;
-            }
-            .st1{
-                fill: #FFFFFF;
-            }
-
-            .body_login{
-                margin: 0;
-            }
-            .login {
-                height:100vh;
-            }
-            .login_left {
-                width: 50%;
-                background-color: #D1D2D4;
-            }
-            .login_right {
-                width: 50%;
-                background-color: #1B2032;
-            }
-            .um_request_name {
-                display: none;
-            }
-            .um-field-checkbox-option{
-                color: #B1B3B7;
-            }
-            .um-button{
-                background-color: #F84313;
-                color:white;
-                border:none;
-                cursor:pointer;
-                border-radius:5px;
-                width: 100%;
-                height: 40px;
-                font-family: 'Work Sans', sans-serif;
-            }
-            .um-col-alt-b,
-            .um-login, 
-            .um-field{
-                margin-top: 10px;
-            }
-            .um-login{
-                display: flex;
-                justify-content: center;
-            }
-            
-        </style>
+        <?php wp_head(); ?>
     </head>
     <body class="body_login">
-        <div class="login d-flex">
-            <div class="login_left d-flex align-items-center">
-                <div class="container">
-                    <div class="row justify-content-md-center">
-                        <div class="col-8">
-                            <!-- LOGO NUMERICA  -->
+        <div class="wrap">
+            <header>
+                <div class="header up">
+                    <div class="up__element">
+                        <!-- Affichage du LOGO NUMERICA avec un lien associé à la page d'accueil -->    
+                        <a href="<?php echo site_url(); ?>">   
                             <svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                viewBox="0 0 200 27" style="enable-background:new 0 0 200 27;" xml:space="preserve">
+                                    viewBox="0 0 129 27" style="enable-background:new 0 0 129 27;" xml:space="preserve">
                                 <g>
                                     <path class="st0" d="M11.5,2.8L14.1,2C13.6,2,13,1.9,12.5,1.9C5.6,1.9,0,7.5,0,14.4c0,6.9,5.6,12.5,12.5,12.5S25,21.3,25,14.4
                                         c0-1.4-0.2-2.8-0.7-4.1l-4.9,1.3L18,6.5l3.4-0.9c-1.2-1.2-2.7-2.2-4.4-2.9l1,3.8l-5.2,1.4L11.5,2.8L11.5,2.8z M14.2,13.1l5.2-1.4
@@ -86,28 +34,30 @@
                                         c0.4-0.5,0.8-1.1,1-1.8l-2.5-0.7C113.5,16.8,113.3,17.2,112.9,17.5z M100.1,19.9h2.8V9.4h-2.8V19.9z"/>
                                 </g>
                             </svg>
-                            <h2 class="text-uppercase font-weight-bold"><?php bloginfo('description'); ?></h2>
-                        </div>
+                            <p><?php bloginfo('description'); ?></p>
+                        </a> 
                     </div>
                 </div>
-            </div>
-            <div class="login_right d-flex align-items-center">
+                <div class="header down">
+                </div>
+            </header>
+            <div class="main">
+                <!-- affichage du nom de la page -->    
+                <h1><?php the_title()?></h1>
                 <div class="container">
-                    <div class="row justify-content-md-center">
-                        <div class="col-8 text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="white" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="row justify-content-md-center">
-                        <div class="col-4">
-                            <?php echo do_shortcode('[ultimatemember form_id="6"]');?>
+                    <div class="row justify-content-center">
+                        <div class="col-5">
+                            <?php echo do_shortcode('[ultimatemember_password]');?>
                         </div>
                     </div>
                 </div>
             </div>
+            <footer>
+                <p>
+                Copyright 2021 Numerica. Tous droits réservé.
+                </p>
+            </footer>
         </div>
+        <?php wp_footer(); ?>
     </body>
 </html>

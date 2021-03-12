@@ -16,11 +16,16 @@
             )
         );
         echo "<script>alert('La formation ".$nomFormation." a bien été créée !');</script>";
-        echo "<script>window.location = '" .site_url("/les-formations")."'</script>";
+        echo "<script>window.location = '" .site_url("/administration")."'</script>";
     }
 ?>
-
-<form class="row" method="POST" enctype="multipart/form-data">
-    <?php get_template_part( 'template-parts/forms/form', 'formation');?>
-</form>
+<?php get_header()?>
+<div class="main">
+    <!-- affichage du nom de la page -->    
+    <h1><?php the_title()?></h1>
+    <form class="row" method="POST" enctype="multipart/form-data">
+        <?php get_template_part( 'template-parts/forms/form', 'formation');?>
+    </form>
+</div>
+<?php get_footer(); ?>
     

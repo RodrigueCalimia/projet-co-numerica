@@ -14,6 +14,15 @@
     <label for="ville_site" class="form-label">Ville</label>
     <input type="text" name="ville_site" class="form-control" id="ville_site" required>
 </div>
-<div id="conteneur-btn">
-    <button type="submit" class="btn btn-primary btn-right">Ajouter</button>
+<div class="col-md-6">
+    <button type="button" class="btn btn-secondary" onclick="ShowListeSites()">Annuler</button>
 </div>
+<div class="col-md-6 btn-justify-content-end">
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+</div>
+
+<script>
+    function ShowListeSites() {
+        window.location = '../administration';
+    }
+</script>

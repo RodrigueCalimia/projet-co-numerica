@@ -25,15 +25,16 @@
             )
         );
         echo "<script>alert('L\'".$typeEntOpcoPage." ".$nomCommercial." a bien été créée !');</script>";
-        
-        if ($typeEntOpcoPage == 'Entreprises'):
-            echo "<script>window.location = '" .site_url("/les-entreprises")."'</script>";
-        elseif ($typeEntOpcoPage == 'OPCO'):
-            echo "<script>window.location = '" .site_url("/les-opco")."'</script>";
-        endif;
+        echo "<script>window.location = '" .site_url("/administration")."'</script>";
     }
 ?>
 
-<form class="row" method="POST" enctype="multipart/form-data">
-    <?php get_template_part( 'template-parts/forms/form', 'entreprise-opco');?>
-</form>
+<?php get_header()?>
+<div class="main">
+    <!-- affichage du nom de la page -->    
+    <h1><?php the_title()?></h1>
+    <form class="row" method="POST" enctype="multipart/form-data">
+        <?php get_template_part( 'template-parts/forms/form', 'entreprise-opco');?>
+    </form>
+</div>
+<?php get_footer(); ?>

@@ -1,3 +1,4 @@
+<?php get_header()?>
 <div class="main-column">
     <h2 class="page-title">Rien n'a été trouvé</h2>
     <p>Il semble que nous ne trouvons pas ce que vous recherchez. Peut-être qu'une recherche peut vous aider.</p>
@@ -11,3 +12,4 @@
 		</form>
 	</div>
 </div>
+<?php get_footer(); ?>

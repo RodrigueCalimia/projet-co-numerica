@@ -297,6 +297,7 @@
     }
 ?>
 
+<?php get_header()?>
 <div class="main">
     <h1>Création d'un devis</h1>
     <!-- nav tabs -->
@@ -393,7 +394,7 @@
                     <!-- Zone du choix du lieu de formation -->
                     <label for="listeFormation" class="form-label">Libellé de la formation</label>
                     <!-- récupération des lieux de formation -->
-                    <select class="form-select" aria-label="Default select example" onchange="change_valeur();" id="listeFormation">
+                    <select class="form-select" aria-label="Default select example" onchange="change_valeur();" id="listeFormation" required>
                         <option selected></option>
                         <?php 
                             $selectForm = "";
@@ -416,15 +417,15 @@
                 </div>
                 <div class="col-md-6">
                     <label for="obj_formation" class="form-label">Objectifs de la formation</label>
-                    <input type="text" name="obj_formation" class="form-control" id="obj_formation" readonly="true" >
+                    <input type="text" name="obj_formation" class="form-control" id="obj_formation" readonly="true" required>
                 </div>
                 <div class="col-md-6">
                     <label for="validationServer03" class="form-label">Objectifs professionnels de la formation</label>
-                    <input type="text" name="obj_pro_formation" class="form-control" id="obj_pro_formation" value="" readonly="true" >
+                    <textarea class="form-control" value="" name="obj_pro_formation" id="obj_pro_formation" readonly="true" rows="3" required></textarea>
                 </div>
                 <div class="col-md-6">
                     <label for="validationServer04" class="form-label">Parcours pédagogique prévisionnel</label>
-                    <input type="text" name="parc_peda_previ" class="form-control" id="parc_peda_previ" value="" readonly="true" >
+                    <textarea class="form-control" value="" name="parc_peda_previ" id="parc_peda_previ" readonly="true" rows="3" required></textarea>
                 </div>
             </div>
             <!-- Contenu de l'onglet Session -->
@@ -1729,3 +1730,4 @@
         window.location = "../offre-commerciale";
     }
 </script>
+<?php get_footer(); ?>

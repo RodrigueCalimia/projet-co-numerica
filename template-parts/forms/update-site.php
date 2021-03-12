@@ -17,12 +17,12 @@
             array('ID_SITE'  =>$_GET['idSite'])
         );
         echo "<script>alert('Le site ".$nomSite." a bien été mise à jour !');</script>";
-        echo "<script>window.location = '" .site_url("/les-sites-numerica")."'</script>";
+        echo "<script>window.location = '" .site_url("/administration")."'</script>";
     }
 ?>
-
+<?php get_header()?>
 <div class="main">   
-    <h1>Modification</h1> 
+    <h1><?php the_title()?></h1>
     <div class="container form-dim-width">
         <form class="row justify-content-between" method="POST" enctype="multipart/form-data">
             <div class="col-md-6">
@@ -53,6 +53,7 @@
 
 <script>
     function ShowListeSites() {
-        window.location = '../les-sites-numerica';
+        window.location = '../administration';
     }
 </script>
+<?php get_footer(); ?>
