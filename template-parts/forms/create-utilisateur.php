@@ -52,13 +52,16 @@
             )
         );
         echo "<script>alert('".$prenomPersonne." ".$nomPersonne." a bien été créé !');</script>";
-        echo "<script>window.location = '" .site_url("/utilisateurs")."'</script>";
+        echo "<script>window.location = '" .site_url("/administration")."'</script>";
     }
 ?>
 
-<form class="row" method="POST" enctype="multipart/form-data">
-    <?php get_template_part( 'template-parts/forms/form', 'personne');?>
-    <div id="conteneur-btn">
-        <button type="submit" class="btn btn-primary btn-right">Ajouter</button>
-    </div>
-</form>
+<?php get_header()?>
+<div class="main">
+    <!-- affichage du nom de la page -->    
+    <h1><?php the_title()?></h1>
+    <form class="row" method="POST" enctype="multipart/form-data">
+        <?php get_template_part( 'template-parts/forms/form', 'utilisateur');?>
+    </form>
+</div>
+<?php get_footer(); ?>

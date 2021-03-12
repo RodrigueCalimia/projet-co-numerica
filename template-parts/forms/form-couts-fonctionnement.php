@@ -48,9 +48,18 @@
             </div>
         </div>
     </div>
-    <div class="row justify-content-md-start" style="margin-bottom: 20px">
+    <div class="row justify-content-between">
         <div class="col-md-6">
-            <button type="submit" class="btn btn-primary">Mettre à jour</button>
+            <button type="button" class="btn btn-secondary" onclick="ShowListeCouts()">Annuler</button>
+        </div>
+        <div class="col-md-6 btn-justify-content-end">
+            <button type="submit" class="btn btn-primary">Modifier</button>
         </div>
     </div>
 </div>
+
+<script>
+    function ShowListeCouts() {
+        window.location = '../administration';
+    }
+</script>

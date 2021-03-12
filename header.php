@@ -1,3 +1,31 @@
+<?php
+    // connexion à la base de donnée
+    global $wpdb;
+    // récupération des données de la table wp_cout_admin_formation contenant le coût administratif formation
+    $lesCoutAdminFormation = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_cout_admin_formation'));
+    // récupération de l'ID
+    foreach ($lesCoutAdminFormation as $leCoutAdminFormation){
+        $cookie_id_cout_admin  = $leCoutAdminFormation->ID_COUT_ADMIN_FORMATION;
+    }
+    // récupération des données de la table wp_cout_comptabilite contenant le coût comptabilité
+    $lesCoutCompta = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_cout_comptabilite'));
+    // récupération des données de la dernière ligne du tableau
+    foreach ($lesCoutCompta as $leCoutCompta){
+        $cookie_id_cout_compta = $leCoutCompta->ID_COUT_COMPTA;
+    }
+    // récupération des données de la table wp_cout_service_informatique contenant le coût service informatique
+    $lesCoutServiceInformatique = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_cout_service_informatique'));
+    // récupération des données de la dernière ligne du tableau
+    foreach ($lesCoutServiceInformatique as $leCoutServiceInformatique){
+        $cookie_id_cout_service    = $leCoutServiceInformatique->ID_COUT_SERVICE_INFORMATIQUE;
+    }
+    // si erreur de connexion avec la BDD alors affichage d'une erreur
+    $wpdb -> print_error ();
+    
+    setcookie("cookie_id_cout_admin", $cookie_id_cout_admin, time() + (86400 * 30), "/"); // 86400 = 1 day
+    setcookie("cookie_id_cout_compta", $cookie_id_cout_compta, time() + (86400 * 30), "/"); // 86400 = 1 day
+    setcookie("cookie_id_cout_service", $cookie_id_cout_service, time() + (86400 * 30), "/"); // 86400 = 1 day
+?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
     <head>
@@ -61,7 +89,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                                 </svg>    
-                                <a class="menu_user__link" href="#">Compte</a>
+                                <a class="menu_user__link" href="<?php echo site_url('/account', ''); ?>">Compte</a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
@@ -97,25 +125,26 @@
                             ?>
                         </div>
                     </nav>
-                    <!--
                     <nav class="header__menu menu" id="mainNav" aria-label="Menu principal">
                         <div class="container-fluid">
-                            <?php /*
+                            <?php
                                 wp_nav_menu ( array (
                                     'theme_location'    => 'admin-menu',
                                     'container'         => false, // supprime la div que rajoute WP
                                     'menu_class'        => 'menu__list',
                                     'depth'             => 1, // interdit le fait d'afficher un sous-menu
                                     'walker'            => new WPDocs_Walker_Nav_Menu() // appel de la classe Walker
-                                ) ); */
+                                ) );
                             ?>
                         </div>
-                    </nav> -->
+                    </nav>
+                    <!--
                     <nav class="nav">
                         <a class="nav-link" href="<?php echo home_url($path = 'administration', $scheme = null);?>">
                             <i class="bi bi-sliders bi-nav-icon"></i>
                         </a>
                     </nav>
+                    -->
                 </div>
             </header>
     

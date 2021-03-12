@@ -53,6 +53,7 @@
     }
 ?>
 
+<?php get_header()?>
 <div class="main">
     <h1><?php get_the_title() ?></h1>
     <!-- nav tabs -->
@@ -218,3 +219,5 @@
         console.log(nomStagiaire);
     }
 </script>
+
+<?php get_footer(); ?>

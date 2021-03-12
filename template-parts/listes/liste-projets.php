@@ -14,6 +14,7 @@
     $wpdb -> print_error ();
 ?>
 
+<?php get_header()?>
 <div class="main">
     <!-- affichage du nom de la page -->    
     <h1><?php the_title()?></h1>
@@ -78,3 +79,4 @@
         window.location = '../creer-un-projet';
     }
 </script>
+<?php get_footer(); ?>

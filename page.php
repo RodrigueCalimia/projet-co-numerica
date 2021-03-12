@@ -1,51 +1,81 @@
-<?php get_header()?>
+<?php //get_header()?>
 
-<?php 
+<?php
+    /*******************************************************\
+                Gestion d'affichage des pages
+    \*******************************************************/
     $pageTitle = get_the_title();
+    $slugPage = basename(get_permalink());
+    echo ('je suis page.php');
     if($pageTitle == 'Tableau de bord'){
         get_template_part( 'template-parts/content/content', 'dashboard');
     }
-    if($pageTitle == 'Les Formations'){
-        get_template_part( 'template-parts/listes/liste', 'formations');
-    }
-    if($pageTitle == 'Ajouter une formation'){
+    /*******************************************************\
+                            FORMATIONS
+    \*******************************************************/
+    if($slugPage == 'creer-une-formation'){
         get_template_part( 'template-parts/forms/create', 'formation');
     }
-    if($pageTitle == 'Les Entreprises' || $pageTitle == 'Les OPCO'){
-        get_template_part( 'template-parts/listes/liste', 'entreprises-opco');
+    if($slugPage == "modifier-une-formation"){
+        get_template_part( 'template-parts/forms/update', 'formation');
     }
-    if($pageTitle == 'Ajouter une entreprise'){
+    /*******************************************************\
+                        SITES NUMERICA
+    \*******************************************************/
+    if($slugPage == 'creer-un-site'){
+        get_template_part( 'template-parts/forms/create', 'site');
+    }
+    if($slugPage == "modifier-un-site"){
+        get_template_part( 'template-parts/forms/update', 'site');
+    }
+    /*******************************************************\
+                            UTILISATEURS
+    \*******************************************************/
+    if($slugPage == 'creer-un-utilisateur'){
+        get_template_part( 'template-parts/forms/create', 'utilisateur');
+    }
+    if($slugPage == "modifier-un-utilisateur"){
+        get_template_part( 'template-parts/forms/update', 'utilisateur');
+    }
+    /*******************************************************\
+                            ENTREPRISES
+    \*******************************************************/
+    if($slugPage == 'creer-une-entreprise-opco'){
         get_template_part( 'template-parts/forms/create', 'entreprise-opco');
     }
-    if($pageTitle == 'Utilisateurs'){
-        get_template_part( 'template-parts/listes/liste', 'personnes');
+    if($slugPage == "modifier-une-entreprise-opco"){
+        get_template_part( 'template-parts/forms/update', 'entreprise-opco');
     }
-    if($pageTitle == 'Ajouter une personne'){
-        get_template_part( 'template-parts/forms/create', 'personne');
+    /*******************************************************\
+                    COÛTS DE FONCTIONNEMENT
+    \*******************************************************/
+    if($slugPage == 'modifier-les-couts-de-fonctionnement'){
+        get_template_part( 'template-parts/forms/update', 'couts-fonctionnement');
     }
-    if($pageTitle == 'Les Devis'){
+
+    if($pageTitle == 'Devis'){
         get_template_part( 'template-parts/listes/liste', 'devis');
     }
     if($pageTitle == 'Créer un devis'){
         get_template_part( 'template-parts/process/process', 'devis');
     }
-    if($pageTitle == 'Les Sites Numerica'){
-        get_template_part( 'template-parts/listes/liste', 'sites');
-    }
-    if($pageTitle == 'Ajouter un site'){
-        get_template_part( 'template-parts/forms/create', 'site');
-    }
     if($pageTitle == 'Administration'){
         get_template_part( 'template-parts/content/content', 'administration');
     }
-    if($pageTitle == 'Les Projets'){
+    if($pageTitle == 'Projets'){
         get_template_part( 'template-parts/process/convertir', 'en-projet');
     }
     if($pageTitle == 'Créer un projet'){
         get_template_part( 'template-parts/process/process', 'projet');
     }
-    if($pageTitle == 'Coûts de fonctionnement'){
-        get_template_part( 'template-parts/forms/update', 'couts-fonctionnement');
+    if($pageTitle == 'Compte'){
+        get_template_part( 'template-parts/content/content', 'account');
+    }
+    if($pageTitle == 'Utilisateur·rice'){
+        get_template_part( 'template-parts/content/content', 'user');
+    }
+    if($pageTitle == 'Réinitialisation du mot de passe'){
+        get_template_part( 'template-parts/content/content', 'password-reset');
     }
 ?>
 

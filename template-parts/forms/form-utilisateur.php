@@ -47,3 +47,15 @@
         <input type="file" class="form-control" id="cv_personne" name="cv_personne">
     </div>
 </div>
+<div class="col-md-6">
+    <button type="button" class="btn btn-secondary" onclick="ShowListeUtilisateurs()">Annuler</button>
+</div>
+<div class="col-md-6 btn-justify-content-end">
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+</div>
+
+<script>
+    function ShowListeUtilisateurs() {
+        window.location = '../administration';
+    }
+</script>
