@@ -299,7 +299,7 @@
 
 <?php get_header()?>
 <div class="main">
-    <h1>Création d'un devis</h1>
+    <h1><?php the_title()?></h1>
     <!-- nav tabs -->
     <nav>
         <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
