@@ -1,5 +1,3 @@
-<?php //get_header()?>
-
 <?php
     /*******************************************************\
                 Gestion d'affichage des pages
@@ -54,39 +52,37 @@
     /*******************************************************\
                             DEVIS
     \*******************************************************/
-    if($pageTitle == 'Devis'){
+    if($slugPage == 'devis'){
         get_template_part( 'template-parts/listes/liste', 'devis');
     }
-    if($pageTitle == 'Créer un devis'){
+    if($slugPage == 'creer-un-devis'){
         get_template_part( 'template-parts/process/process', 'devis');
     }
     /*******************************************************\
                         ADMINISTRATION
     \*******************************************************/
-    if($pageTitle == 'Administration'){
+    if($slugPage == 'administration'){
         get_template_part( 'template-parts/content/content', 'administration');
     }
     /*******************************************************\
                             PROJETS
     \*******************************************************/
-    if($pageTitle == 'Projets'){
+    if($slugPage == 'projets'){
         get_template_part( 'template-parts/process/convertir', 'en-projet');
     }
-    if($pageTitle == 'Créer un projet'){
+    if($slugPage == 'creer-un-projet'){
         get_template_part( 'template-parts/process/process', 'projet');
     }
     /*******************************************************\
                         ULTIMATE MEMBER
     \*******************************************************/
-    if($pageTitle == 'Compte'){
+    if($slugPage == 'account'){
         get_template_part( 'template-parts/content/content', 'account');
     }
-    if($pageTitle == 'Utilisateur·rice'){
+    if($slugPage == 'user'){
         get_template_part( 'template-parts/content/content', 'user');
     }
-    if($pageTitle == 'Réinitialisation du mot de passe'){
+    if($slugPage == 'password-reset'){
         get_template_part( 'template-parts/content/content', 'password-reset');
     }
 ?>
-
-<?php //get_footer(); ?>
