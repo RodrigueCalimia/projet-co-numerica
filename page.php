@@ -1,12 +1,9 @@
-<?php //get_header()?>
-
 <?php
     /*******************************************************\
                 Gestion d'affichage des pages
     \*******************************************************/
     $pageTitle = get_the_title();
     $slugPage = basename(get_permalink());
-    echo ('je suis page.php');
     if($pageTitle == 'Tableau de bord'){
         get_template_part( 'template-parts/content/content', 'dashboard');
     }
@@ -52,31 +49,40 @@
     if($slugPage == 'modifier-les-couts-de-fonctionnement'){
         get_template_part( 'template-parts/forms/update', 'couts-fonctionnement');
     }
-
-    if($pageTitle == 'Devis'){
+    /*******************************************************\
+                            DEVIS
+    \*******************************************************/
+    if($slugPage == 'devis'){
         get_template_part( 'template-parts/listes/liste', 'devis');
     }
-    if($pageTitle == 'Créer un devis'){
+    if($slugPage == 'creer-un-devis'){
         get_template_part( 'template-parts/process/process', 'devis');
     }
-    if($pageTitle == 'Administration'){
+    /*******************************************************\
+                        ADMINISTRATION
+    \*******************************************************/
+    if($slugPage == 'administration'){
         get_template_part( 'template-parts/content/content', 'administration');
     }
-    if($pageTitle == 'Projets'){
+    /*******************************************************\
+                            PROJETS
+    \*******************************************************/
+    if($slugPage == 'projets'){
         get_template_part( 'template-parts/process/convertir', 'en-projet');
     }
-    if($pageTitle == 'Créer un projet'){
+    if($slugPage == 'creer-un-projet'){
         get_template_part( 'template-parts/process/process', 'projet');
     }
-    if($pageTitle == 'Compte'){
+    /*******************************************************\
+                        ULTIMATE MEMBER
+    \*******************************************************/
+    if($slugPage == 'account'){
         get_template_part( 'template-parts/content/content', 'account');
     }
-    if($pageTitle == 'Utilisateur·rice'){
+    if($slugPage == 'user'){
         get_template_part( 'template-parts/content/content', 'user');
     }
-    if($pageTitle == 'Réinitialisation du mot de passe'){
+    if($slugPage == 'password-reset'){
         get_template_part( 'template-parts/content/content', 'password-reset');
     }
 ?>
-
-<?php //get_footer(); ?>

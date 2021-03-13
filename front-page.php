@@ -5,58 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="<?php bloginfo('stylesheet_url'); ?>" type="text/css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <?php //wp_head(); ?>
-        <style type="text/css">
-            .st0{
-                fill-rule:evenodd;
-                clip-rule:evenodd;
-                fill: #FFFFFF;
-            }
-            .st1{
-                fill: #FFFFFF;
-            }
-
-            .body_login{
-                margin: 0;
-            }
-            .login {
-                height:100vh;
-            }
-            .login_left {
-                width: 50%;
-                background-color: #D1D2D4;
-            }
-            .login_right {
-                width: 50%;
-                background-color: #1B2032;
-            }
-            .um_request_name {
-                display: none;
-            }
-            .um-field-checkbox-option{
-                color: #B1B3B7;
-            }
-            .um-button{
-                background-color: #F84313;
-                color:white;
-                border:none;
-                cursor:pointer;
-                border-radius:5px;
-                width: 100%;
-                height: 40px;
-                font-family: 'Work Sans', sans-serif;
-            }
-            .um-col-alt-b,
-            .um-login, 
-            .um-field{
-                margin-top: 10px;
-            }
-            .um-login{
-                display: flex;
-                justify-content: center;
-            }
-            
-        </style>
+        <?php wp_head(); ?>
     </head>
     <body class="body_login">
         <div class="login d-flex">
@@ -103,11 +52,14 @@
                     </div>
                     <div class="row justify-content-md-center">
                         <div class="col-4">
-                            <?php echo do_shortcode('[ultimatemember form_id="6"]');?>
+                            <?php echo do_shortcode('[ultimatemember form_id="7"]');?>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>     
+            <footer>
+            </footer>
         </div>
+        <?php wp_footer(); ?>
     </body>
 </html>

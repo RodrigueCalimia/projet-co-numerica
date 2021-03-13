@@ -299,7 +299,7 @@
 
 <?php get_header()?>
 <div class="main">
-    <h1>Création d'un devis</h1>
+    <h1><?php the_title()?></h1>
     <!-- nav tabs -->
     <nav>
         <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
@@ -328,7 +328,7 @@
                 <div class="col-md-6">
                     <label for="listeEntreprise" class="form-label"> Entreprise </label>
                     <div class="input-group mb-3">
-                        <select class="form-select" aria-label="Default select example" onchange="SelectEntreprise();" id="listeEntreprise">
+                        <select class="form-select" aria-label="Default select example" onchange="SelectEntreprise();" id="listeEntreprise" >
                             <option></option>
                             <?php foreach ($lesEntreprisesOpco as $lEntrepriseOpco):
                                 // stockage des données dans une varaible
@@ -431,95 +431,165 @@
             <!-- Contenu de l'onglet Session -->
             <div class="tab-pane fade" id="nav-session" role="tabpanel" aria-labelledby="nav-session-tab">            
                 <div class="container">
-                    <div class="row">
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        <!-- Card lieu de la formation -->    
                         <div class="col">
-                            <div class="input-group mb-3">
-                                <span class="col form-control lieu-formation"><h6>Lieu de la formation</h6></span>
-                                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addSite" data-bs-whatever="@getbootstrap">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi-plus-circle" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div id="id-boite-check" class="boite-check">
-                                <?php foreach ($lesLieuxFormation as $leLieuFormation):?> 
-                                    <div class="form-check" id="liste-site-numerica">
-                                        <label class="form-check-label" for="listeSiteNumerica">  
-                                            <?php echo  $leLieuFormation->NOM_SITE ;?>
-                                        </label>
-                                        <input class="form-check-input" type="radio" name="listeSite" id="listeSiteNumerica" value="<?php echo  $leLieuFormation->NOM_SITE ;?>">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">   
+                                    <div class="d-flex align-items-center">
+                                        <span class="fs-6 fw-bold">Lieu de la formation</span>
+                                    </div>        
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addSite" data-bs-whatever="@getbootstrap">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi-plus-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div id="id-boite-check" class="boite-check">
+                                        <?php foreach ($lesLieuxFormation as $leLieuFormation):?> 
+                                            <div class="form-check" id="liste-site-numerica">
+                                                <label class="form-check-label" for="listeSiteNumerica">  
+                                                    <?php echo  $leLieuFormation->NOM_SITE ;?>
+                                                </label>
+                                                <input class="form-check-input" type="radio" name="listeSite" id="listeSiteNumerica" value="<?php echo  $leLieuFormation->NOM_SITE ;?>">
+                                            </div>
+                                        <?php endforeach;?>
                                     </div>
-                                <?php endforeach;?>
-                            </div>
-                            <div class="boite-check">
-                                <div class="form-check">
-                                    <label class="form-check-label" for="siteClient">Site client</label>
-                                    <input class="form-check-input" type="radio" name="listeSite" id="siteClient" value="Site client">
-                                </div>
-                                <div class="form-check">
-                                    <label class="form-check-label" for="siteAutre">Autre site</label>
-                                    <input class="form-check-input" type="radio" name="listeSite" id="siteAutre" value="Autre site<">
-                                </div>
-                                <div class="form-check">
-                                    <label class="form-check-label" for="aDistance">À distance</label>
-                                    <input class="form-check-input" type="radio" name="listeSite" id="aDistance" value="À distance">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div>
-                                <h6>Horaires de la formation</h6>
-                                <label class="form-time-label" for="flexTimeDefault01">Matin du</label>
-                                <input class="form-time-input" type="time" value="09:00" id="flexTimeDefault01" name="flexTimeDefault01">
-                                <label class="form-time-label" for="flexTimeDefault02">à</label>
-                                <input class="form-time-input" type="time" value="12:30" id="flexTimeDefault02" name="flexTimeDefault02">
-                                <label class="form-time-label" for="flexTimeDefault03">Après-midi du</label>
-                                <input class="form-time-input" type="time" value="13:30" id="flexTimeDefault03" name="flexTimeDefault03">
-                                <label class="form-time-label" for="flexTimeDefault04">à</label>
-                                <input class="form-time-input" type="time" value="17:00" id="flexTimeDefault04" name="flexTimeDefault04">
-                            </div>
-                            <!-- Zone du choix du type de session -->
-                            <div>
-                                <label for="type-session" class="form-label">Type de Session</label>
-                                <select class="form-select" id="type-session" name="type-session">
-                                    <option value="interEntreprise">Inter-Entreprise</option>
-                                    <option value="intraEntreprise">Intra-Entreprise</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <h6>Prérequis</h6>
-                            <textarea class="form-control" value="" id="prerequis" name="prerequis" rows="3"></textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <h6>Durée de la formation</h6>
-                            <div class="input-group mb-3">
-                                <input type="number" name="duree_formation_jour" class="form-control" id="duree-formation-jour" required onchange="DureeFormationJour();" value=0 min="0" step="0.5">
-                                <span class="input-group-text input-group-text-session" id="basic-addon1">jours</span>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="number" name="duree-formation-heure" class="form-control" id="duree-formation-heure" required onchange="DureeFormationHeure();TotalCoutAchatJourPresta();TotalAchat()" value=0 min="0" step="3.5">
-                                <span class="input-group-text input-group-text-session" id="basic-addon2">heures</span>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <h6>Dates de la formation</h6>
-                            <div class="liste">
-                                <div class="model">
-                                    <div class="dates_formation" id="liste-dates-formation"></div>
+                                    <div class="boite-check">
+                                        <div class="form-check">
+                                            <label class="form-check-label" for="siteClient">Site client</label>
+                                            <input class="form-check-input" type="radio" name="listeSite" id="siteClient" value="Site client">
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label" for="siteAutre">Autre site</label>
+                                            <input class="form-check-input" type="radio" name="listeSite" id="siteAutre" value="Autre site<">
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label" for="aDistance">À distance</label>
+                                            <input class="form-check-input" type="radio" name="listeSite" id="aDistance" value="À distance">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-check">
-                                <label class="form-check-label" for="datesNonDefinies">Dates non définies</label>
-                                <input class="form-check-input" type="checkbox" value="" name="datesNonDefinies">
+                        </div>
+                        <!-- Card type de session --> 
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">   
+                                    <div class="d-flex align-items-center">
+                                        <span class="fs-6 fw-bold">Type de Session</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <select class="form-select" id="type-session" name="type-session">
+                                        <option value="interEntreprise">Inter-Entreprise</option>
+                                        <option value="intraEntreprise">Intra-Entreprise</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
+                        <!-- Card Prérequis --> 
                         <div class="col">
-                            <h6>Nombre de participants</h6>
-                            <input type="number" name="nb_participants" class="form-control" id="nb_participants" required onchange="CopyNbParticipants();TotalCoutAchatCertifs();TotalCoutAchatLocation();TotalAchat()" value=0 min="0">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">   
+                                    <div class="d-flex align-items-center">
+                                        <span class="fs-6 fw-bold">Prérequis</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <textarea class="form-control" value="" id="prerequis" name="prerequis" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Durée de la formation --> 
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">   
+                                    <div class="d-flex align-items-center">
+                                        <span class="fs-6 fw-bold">Durée de la formation</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <input type="number" name="duree_formation_jour" class="form-control" id="duree-formation-jour" required onchange="DureeFormationJour();" value=0 min="0" step="0.5">
+                                            <span class="input-group-text input-group-text-session" id="basic-addon1">jours</span>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <input type="number" name="duree-formation-heure" class="form-control" id="duree-formation-heure" required onchange="DureeFormationHeure();TotalCoutAchatJourPresta();TotalAchat()" value=0 min="0" step="3.5">
+                                            <span class="input-group-text input-group-text-session" id="basic-addon2">heures</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Dates de la formation --> 
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">   
+                                    <div class="d-flex align-items-center">
+                                        <span class="fs-6 fw-bold">Dates de la formation</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="liste">
+                                        <div class="model">
+                                            <div class="dates_formation" id="liste-dates-formation"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="datesNonDefinies">Dates non définies</label>
+                                        <input class="form-check-input" type="checkbox" value="" name="datesNonDefinies">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card horaires de la formation --> 
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">   
+                                    <div class="d-flex align-items-center">
+                                        <span class="fs-6 fw-bold">Horaires de la formation</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label class="form-time-label" for="flexTimeDefault01">Matin du</label>
+                                        </div>
+                                        <div class="col">
+                                            <input class="form-time-input" type="time" value="09:00" id="flexTimeDefault01" name="flexTimeDefault01">
+                                            <label class="form-time-label" for="flexTimeDefault02">à</label>
+                                            <input class="form-time-input" type="time" value="12:30" id="flexTimeDefault02" name="flexTimeDefault02">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label class="form-time-label" for="flexTimeDefault03">Après-midi du</label>
+                                        </div>
+                                        <div class="col">
+                                            <input class="form-time-input" type="time" value="13:30" id="flexTimeDefault03" name="flexTimeDefault03">
+                                            <label class="form-time-label" for="flexTimeDefault04">à</label>
+                                            <input class="form-time-input" type="time" value="17:00" id="flexTimeDefault04" name="flexTimeDefault04">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Nombre de participants --> 
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">   
+                                    <div class="d-flex align-items-center">
+                                        <span class="fs-6 fw-bold">Nombre de participants</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <input type="number" name="nb_participants" class="form-control" id="nb_participants" required onchange="CopyNbParticipants();TotalCoutAchatCertifs();TotalCoutAchatLocation();TotalAchat()" value=0 min="0">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1269,6 +1339,10 @@
     function SelectEntreprise(){
         // récupération du contenu du select Interlocuteur
         var selectInterlocuteur = document.getElementById("listeInterlocuteur");
+        opts = selectInterlocuteur.getElementsByTagName('option');
+        while(opts[0]) {
+            selectInterlocuteur.removeChild(opts[0]);
+        }
         // récupération du contenu du select Entreprise
         var selectEntreprise = document.getElementById("listeEntreprise");
         // récupération da la valeur du select = ID_ENT_OPCO
