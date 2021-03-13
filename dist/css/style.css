@@ -529,6 +529,17 @@ a {
   color: var(--bs-light);
 }
 
+.nav-tabs .nav-link {
+  background-color: var(--gray-200);
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+  color: var(--bs-light);
+  background-color: var(--bs-dark);
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
 .tab-content {
   margin-top: 20px;
   margin-bottom: 20px;
