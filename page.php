@@ -6,7 +6,6 @@
     \*******************************************************/
     $pageTitle = get_the_title();
     $slugPage = basename(get_permalink());
-    echo ('je suis page.php');
     if($pageTitle == 'Tableau de bord'){
         get_template_part( 'template-parts/content/content', 'dashboard');
     }
@@ -52,22 +51,33 @@
     if($slugPage == 'modifier-les-couts-de-fonctionnement'){
         get_template_part( 'template-parts/forms/update', 'couts-fonctionnement');
     }
-
+    /*******************************************************\
+                            DEVIS
+    \*******************************************************/
     if($pageTitle == 'Devis'){
         get_template_part( 'template-parts/listes/liste', 'devis');
     }
     if($pageTitle == 'Créer un devis'){
         get_template_part( 'template-parts/process/process', 'devis');
     }
+    /*******************************************************\
+                        ADMINISTRATION
+    \*******************************************************/
     if($pageTitle == 'Administration'){
         get_template_part( 'template-parts/content/content', 'administration');
     }
+    /*******************************************************\
+                            PROJETS
+    \*******************************************************/
     if($pageTitle == 'Projets'){
         get_template_part( 'template-parts/process/convertir', 'en-projet');
     }
     if($pageTitle == 'Créer un projet'){
         get_template_part( 'template-parts/process/process', 'projet');
     }
+    /*******************************************************\
+                        ULTIMATE MEMBER
+    \*******************************************************/
     if($pageTitle == 'Compte'){
         get_template_part( 'template-parts/content/content', 'account');
     }
