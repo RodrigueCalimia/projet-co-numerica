@@ -1,3 +1,4 @@
+
 .st0{
     fill-rule:evenodd;
     clip-rule:evenodd;
@@ -19,5 +20,20 @@
 }
 .login_right {
     width: 50%;
-    background-color: color(bs-dark);
+    background-color: color(bs-dark );
+}
+.um_request_name {
+    display: none;
+}
+.um-field-checkbox-option{
+    color: color(gray-300);
+}
+.um-col-alt-b,
+.um-login, 
+.um-field{
+    margin-top: 10px;
+}
+.um-login{
+    display: flex;
+    justify-content: center;
 }

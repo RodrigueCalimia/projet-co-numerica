@@ -681,4 +681,27 @@ footer p {
   width: 50%;
   background-color: var(--bs-dark);
 }
+
+.um_request_name {
+  display: none;
+}
+
+.um-field-checkbox-option {
+  color: var(--gray-300);
+}
+
+.um-col-alt-b,
+.um-login,
+.um-field {
+  margin-top: 10px;
+}
+
+.um-login {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
 /*# sourceMappingURL=style.css.map */
