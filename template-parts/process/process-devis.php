@@ -328,7 +328,7 @@
                 <div class="col-md-6">
                     <label for="listeEntreprise" class="form-label"> Entreprise </label>
                     <div class="input-group mb-3">
-                        <select class="form-select" aria-label="Default select example" onchange="SelectEntreprise();" id="listeEntreprise">
+                        <select class="form-select" aria-label="Default select example" onchange="SelectEntreprise();" id="listeEntreprise" >
                             <option></option>
                             <?php foreach ($lesEntreprisesOpco as $lEntrepriseOpco):
                                 // stockage des données dans une varaible
@@ -1269,6 +1269,10 @@
     function SelectEntreprise(){
         // récupération du contenu du select Interlocuteur
         var selectInterlocuteur = document.getElementById("listeInterlocuteur");
+        opts = selectInterlocuteur.getElementsByTagName('option');
+        while(opts[0]) {
+            selectInterlocuteur.removeChild(opts[0]);
+}
         // récupération du contenu du select Entreprise
         var selectEntreprise = document.getElementById("listeEntreprise");
         // récupération da la valeur du select = ID_ENT_OPCO
