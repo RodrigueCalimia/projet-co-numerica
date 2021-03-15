@@ -403,13 +403,18 @@
                             $tabParcourPedaPrevi1 = "var tabParcourPedaPrevi2 = Array()\n";
                             
                             foreach ($lesFormations as $laFormation): 
-                                $selectForm = $selectForm . "<option value=".$laFormation->ID_FORMATION.">".$laFormation->NOM_FORMATION."</option>";
-                                $tabObjForm1 = $tabObjForm1."tabObjForm2[".$laFormation->ID_FORMATION."]='".$laFormation->OBJ_FORMATION."'\n";
-                                $tabObjProForm1 = $tabObjProForm1."tabObjProForm2[".$laFormation->ID_FORMATION."]='".$laFormation->OBJ_PRO_FORMATION."'\n";
-                                $tabParcourPedaPrevi1 = $tabParcourPedaPrevi1."tabParcourPedaPrevi2[".$laFormation->ID_FORMATION."]='".$laFormation->PARCOUR_PEDA_PREVI."'\n";
-                                $tabObjForm2[$laFormation->ID_FORMATION]=$laFormation->OBJ_FORMATION;
-                                $tabObjProForm2[$laFormation->ID_FORMATION]=$laFormation->OBJ_PRO_FORMATION;
-                                $tabParcourPedaPrevi2[$laFormation->ID_FORMATION]=$laFormation->PARCOUR_PEDA_PREVI;
+                                $idFormation = $laFormation->ID_FORMATION;
+                                $nomFormation = $laFormation->NOM_FORMATION;
+                                $objFormation = $laFormation->OBJ_FORMATION;
+                                $objProFormation = $laFormation->OBJ_PRO_FORMATION;
+                                $parcourpedaPrevi = $laFormation->PARCOUR_PEDA_PREVI;
+                                $selectForm = $selectForm . "<option value=".$idFormation.">".$nomFormation."</option>";
+                                $tabObjForm1 = $tabObjForm1."tabObjForm2[".$idFormation."]='".$objFormation."'\n";
+                                $tabObjProForm1 = $tabObjProForm1."tabObjProForm2[".$idFormation."]='".$objProFormation."'\n";
+                                $tabParcourPedaPrevi1 = $tabParcourPedaPrevi1."tabParcourPedaPrevi2[".$idFormation."]='".$parcourpedaPrevi."'\n";
+                                $tabObjForm2[$idFormation]=$objFormation;
+                                $tabObjProForm2[$idFormation]=$objProFormation;
+                                $tabParcourPedaPrevi2[$idFormation]=$parcourpedaPrevi;
                             endforeach;
                             print $selectForm
                         ?>
