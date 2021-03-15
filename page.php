@@ -4,7 +4,7 @@
     \*******************************************************/
     $pageTitle = get_the_title();
     $slugPage = basename(get_permalink());
-    if($pageTitle == 'Tableau de bord'){
+    if($slugPage == 'tableau-de-bord'){
         get_template_part( 'template-parts/content/content', 'dashboard');
     }
     /*******************************************************\

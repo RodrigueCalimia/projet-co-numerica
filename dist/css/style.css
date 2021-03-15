@@ -516,6 +516,10 @@ a {
   background-color: var(--bs-light);
 }
 
+.documents-signes {
+  width: 350px;
+}
+
 .card-header {
   background-color: var(--gray-200);
 }

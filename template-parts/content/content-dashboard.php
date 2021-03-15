@@ -9,7 +9,8 @@
     // connexion à la base de donnée
     global $wpdb;
     // récupération des données de la table wp_projets contenant les projets
-    $lesProjets = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_dashboard'));
+    //$lesProjets = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_dashboard'));
+    $lesProjets = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis_test'));
 
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();
@@ -36,13 +37,20 @@
                 <!-- alimentation des lignes du tableau -->   
                 <tbody>
                     <?php foreach ($lesProjets as $leProjet) :
-                            $idProjet       = $leProjet->ID_DASHBOARD;
+                            /*$idProjet       = $leProjet->ID_DASHBOARD;
                             $numForm        = $leProjet->NUM_FORM;
                             $societe        = $leProjet->CLIENT;
                             $nomFormation   = $leProjet->FORMATION;
                             $datesFormation = $leProjet->DATE;
                             $montant        = $leProjet->MONTANT;
-                            $statut         = $leProjet->STATUT;
+                            $statut         = $leProjet->STATUT;*/
+                            $idProjet       = $leProjet->ID_DEVIS;
+                            $numForm        = $leProjet->NUM_FORM;
+                            $societe        = $leProjet->SOCIETE;
+                            $nomFormation   = $leProjet->NOM_FORM;
+                            $datesFormation = $leProjet->DATES_FORM;
+                            $montant        = $leProjet->MONTANT;
+                            $statut         = $leProjet->STATUT_DEVIS;
                         ?>    
                         <tr>
                             <td><?php echo  $numForm ;?></td>

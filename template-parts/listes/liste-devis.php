@@ -9,14 +9,18 @@
     // connexion à la base de donnée
     global $wpdb;
     // récupération des données de la table wp_devis contenant les devis
-    $lesDevis = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis'));
+    //$lesDevis = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis'));
+    $lesDevis = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis_test'));
     // si erreur de connexion avec la BDD alors affichage d'une erreur
     $wpdb -> print_error ();
 ?>
 <?php get_header()?>
 <div class="main">
     <!-- affichage du nom de la page -->    
-    <h1><?php the_title()?></h1>
+    <h1>
+        <?php //the_title()?>
+        Liste des Devis
+    </h1>
     <section>
         <div class="header-section justify-content-md-end">
             <!-- <div class="search">    
@@ -34,7 +38,7 @@
                 <!-- dénomination des titres du tableau -->
                 <thead>
                     <tr>
-                        <th>N°</th>
+                        <th>N° Devis</th>
                         <th>Libellé</th>
                         <th>Société</th>
                         <th>Statut</th>
