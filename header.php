@@ -25,7 +25,13 @@
     setcookie("cookie_id_cout_admin", $cookie_id_cout_admin, time() + (86400 * 30), "/"); // 86400 = 1 day
     setcookie("cookie_id_cout_compta", $cookie_id_cout_compta, time() + (86400 * 30), "/"); // 86400 = 1 day
     setcookie("cookie_id_cout_service", $cookie_id_cout_service, time() + (86400 * 30), "/"); // 86400 = 1 day
+
+    setcookie("num_formation", $num_formation, time() + (86400 * 30), "/"); // 86400 = 1 day
+
+    session_start();
+    $_SESSION['num_formation'] = $numFormation;
 ?>
+
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
     <head>

@@ -227,6 +227,18 @@
                     </table>
                 </div>
             </div>
+            <!-- Contenu de l'onglet Documents -->            
+            <div class="tab-pane fade" id="nav-documents" role="tabpanel" aria-labelledby="nav-documents-tab">
+                
+            </div>
+            <!-- Contenu de l'onglet Documents Signés -->            
+            <div class="tab-pane fade" id="nav-documents-signes" role="tabpanel" aria-labelledby="nav-documents-signes-tab">
+                
+            </div>
+            <!-- Contenu de l'onglet Facture -->            
+            <div class="tab-pane fade" id="nav-facture" role="tabpanel" aria-labelledby="nav-facture-tab">
+                
+            </div>
         </div>
     </form>
 </div>

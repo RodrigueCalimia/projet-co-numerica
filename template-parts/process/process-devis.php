@@ -3,7 +3,8 @@
     // connexion à la base de donnée
     global $wpdb;
     // récupération des données de la table wp_devis contenant les devis
-    $lesDevis = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis'));
+    //$lesDevis = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis'));
+    $lesDevis = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_devis_test'));
     // récupération des données de la table wp_type_personne contenant les types des personnes
     $lesTypesPersonnes = $wpdb->get_results($wpdb->prepare('SELECT * FROM wp_type_personne'));
     // récupération des données de la table wp_sites contenant les lieux de formations
@@ -63,78 +64,7 @@
                     GESTION DU FORMULAIRE
     \*******************************************************/
     if ($_POST) {
-        /********************************************************************\
-            Ajout des dates de formation dans la table wp_dates_formation
-        \********************************************************************/
-        // récupération des dates de la formation
-        $nbJour = $dureeFormationJours + 0.5;
-        for($i = 1; $i <= $nbJour; $i++){
-            $wpdb->insert('wp_dates_formation', 
-                array(
-                    'NUM_FORM'          =>$numFormation,
-                    'NUM_JOUR'          =>$i,
-                    'DATE_FORMATION'    =>$_POST['date-formation-jour'.$i]
-                )
-            );
-        }
-
-        /****************************************************************************\
-            Ajout de la nouvelle entreprise dans la table wp_entreprises_opco
-        \****************************************************************************/
-        $typeEntOpcoPage    =$_POST['typeEntrepriseOPCO'];
-        $nomCommercial      =$_POST['nom_commercial'];
-        $adresse            =$_POST['adresse-entreprise-opco'];
-        $codePostal         =$_POST['code_postal-entreprise-opco'];
-        $ville              =$_POST['ville-entreprise-opco'];
-        $siret              =$_POST['siret-entreprise-opco'];
-        $naf                =$_POST['naf-entreprise-opco']; 
-        if($nomCommercial){
-            $wpdb->insert('wp_entreprises_opco', 
-                array(
-                    'TYPE_ENT_OPCO'     =>$typeEntOpcoPage,
-                    'NOM_ENT_OPCO'      =>$nomCommercial,
-                    'ADRESSE_ENT_OPCO'  =>$adresse,
-                    'CP_ENT_OPCO'       =>$codePostal,
-                    'VILLE_ENT_OPCO'    =>$ville,
-                    'SIRET_ENT_OPCO'    =>$siret,
-                    'NAF_ENT_OPCO'      =>$naf,
-                )
-            );
-        }
-
-        /****************************************************************************\
-            Ajout du nouvel interlocuteur dans la table wp_personnes
-        \****************************************************************************/
-        $nomPersonne    =$_POST['nom_personne'];
-        $prenomPersonne =$_POST['prenom_personne'];
-        $emailPersonne  =$_POST['email_personne'];
-        $telPersonne    =$_POST['tel_personne'];
-        $kabisPersonne  =$_POST['kabis_personne'];
-        $typePersonne   =$_POST['type_personne'];
-        // ajout des données dans la table
-        $wpdb->insert('wp_personnes', 
-            array(
-                'NOM_PERSONNE'                      =>$nomPersonne,
-                'PRENOM_PERSONNE'                   =>$prenomPersonne,
-                'EMAIL_PERSONNE'                    =>$emailPersonne,
-                'TEL_PERSONNE'                      =>$telPersonne,
-                'TYPE_PERSONNE'                     =>$typePersonne,
-                'KABIS_PERSONNE'                    =>$kabisPersonne,
-                'ID_FORMATEUR'                      =>0,
-                'ID_STAGIAIRE'                      =>0,
-                'ID_ENT_OPCO'                       =>0,
-                'CV_PERSONNE'                       =>$fichier,
-                'ROLE_ADMIN_WP'                     =>false,
-                'ROLE_ADMIN_SOLUTION'               =>false,
-                'ROLE_ADMROLE_GESTIONNAIREIN_WP'    =>false,
-                'ROLE_ADMROLE_ASSISTANTEIN_WP'      =>false,
-                'ROLE_FINANCE'                      =>false,
-                'ROLE_FORMATEUR'                    =>false,
-                'ROLE_CLIENT'                       =>false,
-                'ROLE_SUBROGATEUR'                  =>false,
-            )
-        );
-
+        
         /*******************************************************\
             Récupération des données de l'onglet CLIENT
         \*******************************************************/
@@ -159,8 +89,16 @@
         /*******************************************************\
             Récupération des données de l'onglet PEDAGOGIE
         \*******************************************************/
+        $nomFormation       =$_POST['nom_formation'];
+        $objFormation       =$_POST['obj_formation'];
+        $objProFormation    =$_POST['obj_pro_formation'];
+        $parcPedaPrevi      =$_POST['parc_peda_previ'];
+
+        /*******************************************************\
+            Récupération des données de l'onglet SESSION
+        \*******************************************************/
         // récupération du lieu de la formation
-        $lieuFormation      =$_POST['listeSite'];
+        $lieuFormation  =$_POST['listeSite'];
         // récupération des valeurs des champs du formulaire de création d'un site
         $nomSite        =$_POST['nom_site'];
         $adresseSite    =$_POST['adresse_site'];
@@ -174,10 +112,6 @@
         $horaireMatinFin    = $_POST['flexTimeDefault02'];
         $horaireApremDebut  = $_POST['flexTimeDefault03'];
         $horaireApremFin    = $_POST['flexTimeDefault04'];
-
-        /*******************************************************\
-            Récupération des données de l'onglet SESSION
-        \*******************************************************/
         // récupération du type de session
         $typeSession  = $_POST['flexTimeDefault01'];
         // récupération de la date non définie
@@ -268,17 +202,11 @@
         $syntheseAchats                 = $_POST['row-total-achats-fonctionnement'];
         $syntheseMarge                  = $_POST['row-total-marge'];
         $synthesemargePourcentage       = $_POST['row-total-marge-pourcentage'];
-        $wpdb->insert('wp_devis', 
-            array(
-                'NUM_FORM'      =>$numFormation,
-                'NOM_FORM'      =>$nomFormation,
-                'SOCIETE'       =>$societe,
-                'DATES_FORM'    =>$datesFormation,
-                'NB_STAGIAIRES' =>$nbStagiaires
-            )
-        );
-    
+        /********************************************************************\
+            Ajout des dates de formation dans la table wp_dates_formation
+        \********************************************************************/
         // récupération des valeurs des champs du formulaire de la modal pour création du nouveau site
+        /*
         $nomSite        =$_POST['nom_site'];
         $adresseSite    =$_POST['adresse_site'];
         $cpSite         =$_POST['code_postal_site'];
@@ -292,8 +220,102 @@
                 'VILLE_SITE'        =>$villeSite,
             )
         );
+        */
+        
+        /********************************************************************\
+            Ajout des dates de formation dans la table wp_dates_formation
+        \********************************************************************/
+        // récupération des dates de la formation
+        /*
+        $nbJour = $dureeFormationJours + 0.5;
+        for($i = 1; $i <= $nbJour; $i++){
+            $wpdb->insert('wp_dates_formation', 
+                array(
+                    'NUM_FORM'          =>$numFormation,
+                    'NUM_JOUR'          =>$i,
+                    'DATE_FORMATION'    =>$_POST['date-formation-jour'.$i]
+                )
+            );
+        }
+        */
+
+        /****************************************************************************\
+            Ajout de la nouvelle entreprise dans la table wp_entreprises_opco
+        \****************************************************************************/
+        /*
+        $typeEntOpcoPage    =$_POST['typeEntrepriseOPCO'];
+        $nomCommercial      =$_POST['nom_commercial'];
+        $adresse            =$_POST['adresse-entreprise-opco'];
+        $codePostal         =$_POST['code_postal-entreprise-opco'];
+        $ville              =$_POST['ville-entreprise-opco'];
+        $siret              =$_POST['siret-entreprise-opco'];
+        $naf                =$_POST['naf-entreprise-opco']; 
+        if($nomCommercial){
+            $wpdb->insert('wp_entreprises_opco', 
+                array(
+                    'TYPE_ENT_OPCO'     =>$typeEntOpcoPage,
+                    'NOM_ENT_OPCO'      =>$nomCommercial,
+                    'ADRESSE_ENT_OPCO'  =>$adresse,
+                    'CP_ENT_OPCO'       =>$codePostal,
+                    'VILLE_ENT_OPCO'    =>$ville,
+                    'SIRET_ENT_OPCO'    =>$siret,
+                    'NAF_ENT_OPCO'      =>$naf,
+                )
+            );
+        }
+        */
+
+        /****************************************************************************\
+            Ajout du nouvel interlocuteur dans la table wp_personnes
+        \****************************************************************************/
+        /*
+        $nomPersonne    =$_POST['nom_personne'];
+        $prenomPersonne =$_POST['prenom_personne'];
+        $emailPersonne  =$_POST['email_personne'];
+        $telPersonne    =$_POST['tel_personne'];
+        $kabisPersonne  =$_POST['kabis_personne'];
+        $typePersonne   =$_POST['type_personne'];
+        // ajout des données dans la table
+        if($nomPersonne){
+            $wpdb->insert('wp_personnes', 
+                array(
+                    'NOM_PERSONNE'                      =>$nomPersonne,
+                    'PRENOM_PERSONNE'                   =>$prenomPersonne,
+                    'EMAIL_PERSONNE'                    =>$emailPersonne,
+                    'TEL_PERSONNE'                      =>$telPersonne,
+                    'TYPE_PERSONNE'                     =>$typePersonne,
+                    'KABIS_PERSONNE'                    =>$kabisPersonne,
+                    'ID_FORMATEUR'                      =>0,
+                    'ID_STAGIAIRE'                      =>0,
+                    'ID_ENT_OPCO'                       =>0,
+                    'CV_PERSONNE'                       =>$fichier,
+                    'ROLE_ADMIN_WP'                     =>false,
+                    'ROLE_ADMIN_SOLUTION'               =>false,
+                    'ROLE_ADMROLE_GESTIONNAIREIN_WP'    =>false,
+                    'ROLE_ADMROLE_ASSISTANTEIN_WP'      =>false,
+                    'ROLE_FINANCE'                      =>false,
+                    'ROLE_FORMATEUR'                    =>false,
+                    'ROLE_CLIENT'                       =>false,
+                    'ROLE_SUBROGATEUR'                  =>false,
+                )
+            );
+        }
+        */
+        
+        $wpdb->insert('wp_devis_test', 
+            array(
+                'NOM_FORM'      =>$nomFormation,
+                'SOCIETE'       =>$entreprise,
+                'STATUT_DEVIS'  =>"Initialisé",
+                'NUM_FORM'      =>$numFormation,
+                'DATES_FORM'    =>"17/03/2021",
+                'NB_STAGIAIRES' =>$nbParticipants,
+                'MONTANT'       =>$syntheseVentes,
+            )
+        );
+    
         echo "<script>alert('Le devis ".$numFormation." a bien été éditer !');</script>";
-        echo "<>window.location = '" .site_url("/les-devis")."'</>";
+        echo "<script>window.location = '" .site_url("/devis")."'</script>";
     }
 ?>
 
@@ -322,7 +344,7 @@
                 <!-- Choix de la date -->
                 <div class="col-md-6">
                     <label for="dateFormation" class="form-label">Date</label>
-                    <input type="date" name="dateFormation" class="form-control" id="dateFormation" required value="" >
+                    <input type="date" name="dateFormation" class="form-control" id="dateFormation" value="" >
                 </div>
                 <!-- Choix de l'entreprise -->
                 <div class="col-md-6">
@@ -394,7 +416,7 @@
                     <!-- Zone du choix du lieu de formation -->
                     <label for="listeFormation" class="form-label">Libellé de la formation</label>
                     <!-- récupération des lieux de formation -->
-                    <select class="form-select" aria-label="Default select example" onchange="change_valeur();" id="listeFormation" required>
+                    <select class="form-select" aria-label="Default select example" onchange="change_valeur();" id="listeFormation" >
                         <option selected></option>
                         <?php 
                             $selectForm = "";
@@ -422,15 +444,15 @@
                 </div>
                 <div class="col-md-6">
                     <label for="obj_formation" class="form-label">Objectifs de la formation</label>
-                    <input type="text" name="obj_formation" class="form-control" id="obj_formation" readonly="true" required>
+                    <input type="text" name="obj_formation" class="form-control" id="obj_formation" readonly="true" >
                 </div>
                 <div class="col-md-6">
                     <label for="validationServer03" class="form-label">Objectifs professionnels de la formation</label>
-                    <textarea class="form-control" value="" name="obj_pro_formation" id="obj_pro_formation" readonly="true" rows="3" required></textarea>
+                    <textarea class="form-control" value="" name="obj_pro_formation" id="obj_pro_formation" readonly="true" rows="3" ></textarea>
                 </div>
                 <div class="col-md-6">
                     <label for="validationServer04" class="form-label">Parcours pédagogique prévisionnel</label>
-                    <textarea class="form-control" value="" name="parc_peda_previ" id="parc_peda_previ" readonly="true" rows="3" required></textarea>
+                    <textarea class="form-control" value="" name="parc_peda_previ" id="parc_peda_previ" readonly="true" rows="3" ></textarea>
                 </div>
             </div>
             <!-- Contenu de l'onglet Session -->
@@ -519,11 +541,11 @@
                                 <div class="card-body">
                                     <div class="col-6">
                                         <div class="input-group mb-3">
-                                            <input type="number" name="duree_formation_jour" class="form-control" id="duree-formation-jour" required onchange="DureeFormationJour();" value=0 min="0" step="0.5">
+                                            <input type="number" name="duree_formation_jour" class="form-control" id="duree-formation-jour" onchange="DureeFormationJour();" value=0 min="0" step="0.5">
                                             <span class="input-group-text input-group-text-session" id="basic-addon1">jours</span>
                                         </div>
                                         <div class="input-group mb-3">
-                                            <input type="number" name="duree-formation-heure" class="form-control" id="duree-formation-heure" required onchange="DureeFormationHeure();TotalCoutAchatJourPresta();TotalAchat()" value=0 min="0" step="3.5">
+                                            <input type="number" name="duree-formation-heure" class="form-control" id="duree-formation-heure" onchange="DureeFormationHeure();TotalCoutAchatJourPresta();TotalAchat()" value=0 min="0" step="3.5">
                                             <span class="input-group-text input-group-text-session" id="basic-addon2">heures</span>
                                         </div>
                                     </div>
@@ -592,7 +614,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <input type="number" name="nb_participants" class="form-control" id="nb_participants" required onchange="CopyNbParticipants();TotalCoutAchatCertifs();TotalCoutAchatLocation();TotalAchat()" value=0 min="0">
+                                    <input type="number" name="nb_participants" class="form-control" id="nb_participants" onchange="CopyNbParticipants();TotalCoutAchatCertifs();TotalCoutAchatLocation();TotalAchat()" value=0 min="0">
                                 </div>
                             </div>
                         </div>
@@ -631,11 +653,14 @@
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
                                 <input type="number" name="montant-prix-vente-jour-form" class="form-control" id="montant-prix-vente-jour-form" value=0 min="0" step="0.01" onchange="TotalPrixVenteJourForm();TotalChiffrage()">
-                                <span class="input-group-text">€</span>
+                                <span class="input-group-text">€/h</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-prix-vente-jour-form" class="form-control" id="qte-prix-vente-jour-form" value=0 min="0" step="0.5" onchange="TotalPrixVenteJourForm();TotalChiffrage()">
+                            <div class="input-group mb-3">
+                                <input type="number" name="qte-prix-vente-jour-form" class="form-control" id="qte-prix-vente-jour-form" value=0 min="0" step="0.5" onchange="TotalPrixVenteJourForm();TotalChiffrage()"  readonly="true">
+                                <span class="input-group-text">h</span>
+                            </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
@@ -770,11 +795,14 @@
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
                                 <input type="number" name="montant-cout-achat-jour-presta" class="form-control" id="montant-cout-achat-jour-presta" value=0 min="0" step="0.01" onchange="TotalCoutAchatJourPresta();TotalAchat()">
-                                <span class="input-group-text">€</span>
+                                <span class="input-group-text">€/h</span>
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <input type="number" name="qte-cout-achat-jour-presta" class="form-control" id="qte-cout-achat-jour-presta" value=0 min="0" readonly="true" onchange="TotalCoutAchatJourPresta();TotalAchat()">
+                            <div class="input-group mb-3">
+                                <input type="number" name="qte-cout-achat-jour-presta" class="form-control" id="qte-cout-achat-jour-presta" value=0 min="0" readonly="true" onchange="TotalCoutAchatJourPresta();TotalAchat()">
+                                <span class="input-group-text">h</span>
+                            </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="input-group mb-3">
@@ -1134,7 +1162,7 @@
                     <!-- Bouton d'édition du devis -->          
                     <div class="col btn-justify-content-end">
                         <!--<input class="btn btn-primary" type="submit" value="Éditer le devis" name="edit-devis"></input>-->  
-                        <input class="btn btn-primary" type="button" value="Éditer le devis" name="edit-devis" onclick="EditDevis()"></input>
+                        <button type="submit" class="btn btn-primary">Éditer le devis</button>
                     </div>
                 </div>
             </div>
@@ -1155,31 +1183,31 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="nom_commercial" class="form-label">Nom commercial</label>
-                                <input type="text" name="nom_commercial" class="form-control" id="nom_commercial" required>
+                                <input type="text" name="nom_commercial" class="form-control" id="nom_commercial">
                             </div>
                         </div>
                         <div class="col-12">
                             <label for="adresse-entreprise-opco" class="form-label">Adresse</label>
-                            <input type="text" name="adresse-entreprise-opco" class="form-control" id="adresse-entreprise-opco" required>
+                            <input type="text" name="adresse-entreprise-opco" class="form-control" id="adresse-entreprise-opco">
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="code_postal-entreprise-opco" class="form-label">Code postal</label>
-                                <input type="number" name="code_postal-entreprise-opco" class="form-control" id="code_postal-entreprise-opco" min="0" required>
+                                <input type="number" name="code_postal-entreprise-opco" class="form-control" id="code_postal-entreprise-opco" min="0">
                             </div>
                             <div class="col-md-6">
                                 <label for="ville-entreprise-opco" class="form-label">Ville</label>
-                                <input type="text" name="ville-entreprise-opco" class="form-control" id="ville-entreprise-opco" required>
+                                <input type="text" name="ville-entreprise-opco" class="form-control" id="ville-entreprise-opco">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="siret-entreprise-opco" class="form-label">Siret</label>
-                                <input type="text" name="siret-entreprise-opco" class="form-control" id="siret-entreprise-opco" required>
+                                <input type="text" name="siret-entreprise-opco" class="form-control" id="siret-entreprise-opco">
                             </div>
                             <div class="col-md-6">
                                 <label for="naf-entreprise-opco" class="form-label">NAF</label>
-                                <input type="text" name="naf-entreprise-opco" class="form-control" id="naf-entreprise-opco" required>
+                                <input type="text" name="naf-entreprise-opco" class="form-control" id="naf-entreprise-opco">
                             </div>
                         </div>
                     </div>
@@ -1207,21 +1235,21 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="nom_personne" class="form-label">Nom</label>
-                                <input type="text" name="nom_personne" class="form-control" id="nom_personne" required>
+                                <input type="text" name="nom_personne" class="form-control" id="nom_personne">
                             </div>
                             <div class="col-md-6">
                                 <label for="prenom_personne" class="form-label">Prénom</label>
-                                <input type="text" name="prenom_personne" class="form-control" id="prenom_personne" required>
+                                <input type="text" name="prenom_personne" class="form-control" id="prenom_personne">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="email_personne" class="form-label">Email</label>
-                                <input type="text" name="email_personne" class="form-control" id="email_personne" value="" required>
+                                <input type="text" name="email_personne" class="form-control" id="email_personne" value="">
                             </div>
                             <div class="col-md-6">
                                 <label for="tel_personne" class="form-label">Téléphone</label>
-                                <input type="text" name="tel_personne" class="form-control" id="tel_personne" value="" required>
+                                <input type="text" name="tel_personne" class="form-control" id="tel_personne" value="">
                             </div>
                         </div>
                         <!-- Masqué car pas besoin pour un interlocuteur
@@ -1259,21 +1287,21 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="nomRespFormation" class="form-label">Nom</label>
-                                <input type="text" name="nomRespFormation" class="form-control" id="nomRespFormation" required>
+                                <input type="text" name="nomRespFormation" class="form-control" id="nomRespFormation">
                             </div>
                             <div class="col-md-6">
                                 <label for="prenomRespFormation" class="form-label">Prénom</label>
-                                <input type="text" name="prenomRespFormation" class="form-control" id="prenomRespFormation" required>
+                                <input type="text" name="prenomRespFormation" class="form-control" id="prenomRespFormation">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="emailRespFormation" class="form-label">Email</label>
-                                <input type="text" name="emailRespFormation" class="form-control" id="emailRespFormation" value="" required>
+                                <input type="text" name="emailRespFormation" class="form-control" id="emailRespFormation" value="">
                             </div>
                             <div class="col-md-6">
                                 <label for="telRespFormation" class="form-label">Téléphone</label>
-                                <input type="text" name="telRespFormation" class="form-control" id="telRespFormation" value="" required>
+                                <input type="text" name="telRespFormation" class="form-control" id="telRespFormation" value="">
                             </div>
                         </div>
                         <!--
@@ -1306,19 +1334,19 @@
                         <?php //get_template_part( 'template-parts/forms/create', 'site');?>
                         <div class="col-md-6">
                             <label for="nom_site" class="form-label">Libellé du site</label>
-                            <input type="text" name="nom_site" class="form-control" id="nom_site" required>
+                            <input type="text" name="nom_site" class="form-control" id="nom_site">
                         </div>
                         <div class="col-md-6">
                             <label for="adresse_site" class="form-label">Adresse</label>
-                            <input type="text" name="adresse_site" class="form-control" id="adresse_site" required>
+                            <input type="text" name="adresse_site" class="form-control" id="adresse_site">
                         </div>
                         <div class="col-md-6">
                             <label for="code_postal_site" class="form-label">Code postal</label>
-                            <input type="number" name="code_postal_site" class="form-control" id="code_postal_site" min="0"  required>
+                            <input type="number" name="code_postal_site" class="form-control" id="code_postal_site" min="0" >
                         </div>
                         <div class="col-md-6">
                             <label for="ville_site" class="form-label">Ville</label>
-                            <input type="text" name="ville_site" class="form-control" id="ville_site" required>
+                            <input type="text" name="ville_site" class="form-control" id="ville_site">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -1441,7 +1469,7 @@
         // récupération du nombre de jour de formation déclaré
         var dureeFormationJour = parseFloat(document.getElementById("duree-formation-jour").value);
         // Mise à jour de la zone "Dates de la formation"
-        var listeDatesFormation = ''; document.querySelector("#liste-dates-formation").innerHTML;
+        var listeDatesFormation = ''; //document.querySelector("#liste-dates-formation").innerHTML;
         //console.log(listeDatesFormation);
         // vérification si la durée de la formation en jour est un entier
         if (!Number.isInteger(+dureeFormationJour)) {
@@ -1450,7 +1478,7 @@
             for(i = 0; i <= dureeFormationJour; i++){
                 nbJour ++;
                 listeDatesFormation = listeDatesFormation + '<label for="labelDatesFormation' + nbJour + '" class="form-label">Jour ' + nbJour + '</label>';
-                listeDatesFormation = listeDatesFormation + '<input type="date" class="form-control" required name="date-formation-jour' + nbJour + '">';
+                listeDatesFormation = listeDatesFormation + '<input type="date" class="form-control" name="date-formation-jour' + nbJour + '">';
                 document.querySelector("#liste-dates-formation").innerHTML = listeDatesFormation;
             }
         }
@@ -1468,6 +1496,7 @@
     \*******************************************************/
     function DureeFormationHeure(){
         dureeFormationHeure = document.querySelector("#duree-formation-heure").value;
+        document.querySelector("#qte-prix-vente-jour-form").value = dureeFormationHeure;
         document.querySelector("#qte-cout-achat-jour-presta").value = dureeFormationHeure;
     }
 
@@ -1803,10 +1832,6 @@
         totalMarge = parseFloat(document.getElementById('row-total-marge').value);
         margePourcentage = (totalMarge / totalVentes) * 100;
         document.getElementById('row-total-marge-pourcentage').value = margePourcentage.toFixed(2);
-    }
-
-    function EditDevis(){
-        window.location = "../offre-commerciale";
     }
 </script>
 <?php get_footer(); ?>
